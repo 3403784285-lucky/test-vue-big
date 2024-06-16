@@ -155,3 +155,11 @@ export const userFreezeService = (userId) => {
 export const userUnfreezeService = (userId) => {
   return request.post('/user/unfreeze', { userId })
 }
+//查询用户订单
+export const userAskOrderService = (userId) => {
+  return request.post('/user/askOrder', { userId })
+}
+
+export const userCancelService = (userId) => {
+  return request.post('/user/cancel', { userId })
+}

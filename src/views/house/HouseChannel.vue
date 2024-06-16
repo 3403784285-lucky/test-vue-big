@@ -156,7 +156,7 @@
                         class="btn btn-dark preview"
                         data-bs-toggle="modal"
                         data-bs-target="#exampleModal"
-                        @click="clickPreview"
+                        @click="clickPreview(house.skuId)"
                       >
                         预约带看
                       </button>
@@ -182,14 +182,14 @@
                             </div>
                             <div class="modal-body">
                               <div class="container">
-                                <div class="row preview-frame">
+                                <div class="row preview-frame" v-if="flagJudge">
                                   <input
                                     type="radio"
                                     class="btn-check testId clickTest"
                                     name="options-outlined"
                                     id="btn-check-2-outlined1"
                                     autocomplete="off"
-                                    :disabled="isDisabled1('option1Two')"
+                                    :disabled="isDisabled1(time[0].id)"
                                     v-model="selectedOption1"
                                     @click="clickOne"
                                     :value="time[0].id"
@@ -197,6 +197,18 @@
                                   <label
                                     class="btn btn-outline-secondary"
                                     for="btn-check-2-outlined1"
+                                    :style="[
+                                      {
+                                        backgroundColor: isDisabled1(time[0].id)
+                                          ? 'white'
+                                          : ''
+                                      },
+                                      {
+                                        color: isDisabled1(time[0].id)
+                                          ? 'rgba(184, 187, 189, 0.592)'
+                                          : 'black'
+                                      }
+                                    ]"
                                     >{{ time[0].houseTimeType }}</label
                                   >
 
@@ -207,13 +219,25 @@
                                     id="btn-check-2-outlined2"
                                     v-model="selectedOption1"
                                     autocomplete="off"
-                                    :disabled="isDisabled1('option1Tree')"
+                                    :disabled="isDisabled1(time[1].id)"
                                     @click="clickOne"
                                     :value="time[1].id"
                                   />
                                   <label
                                     class="btn btn-outline-secondary"
                                     for="btn-check-2-outlined2"
+                                    :style="[
+                                      {
+                                        backgroundColor: isDisabled1(time[1].id)
+                                          ? 'white'
+                                          : ''
+                                      },
+                                      {
+                                        color: isDisabled1(time[1].id)
+                                          ? 'rgba(184, 187, 189, 0.592)'
+                                          : 'black'
+                                      }
+                                    ]"
                                     >{{ time[1].houseTimeType }}</label
                                   >
 
@@ -224,17 +248,29 @@
                                     id="btn-check-2-outlined3"
                                     v-model="selectedOption1"
                                     autocomplete="off"
-                                    :disabled="isDisabled1('option1One')"
+                                    :disabled="isDisabled1(time[2].id)"
                                     @click="clickOne"
                                     :value="time[2].id"
                                   />
                                   <label
                                     class="btn btn-outline-secondary"
                                     for="btn-check-2-outlined3"
+                                    :style="[
+                                      {
+                                        backgroundColor: isDisabled1(time[2].id)
+                                          ? 'white'
+                                          : ''
+                                      },
+                                      {
+                                        color: isDisabled1(time[2].id)
+                                          ? 'rgba(184, 187, 189, 0.592)'
+                                          : 'black'
+                                      }
+                                    ]"
                                     >{{ time[2].houseTimeType }}</label
                                   >
                                 </div>
-                                <div class="pre-opt row">
+                                <div class="pre-opt row" v-if="flagJudge">
                                   <div class="col-md-3">
                                     <input
                                       type="radio"
@@ -243,13 +279,29 @@
                                       v-model="selectedOption2"
                                       id="option1"
                                       autocomplete="off"
-                                      :disabled="isDisabled2('option2One')"
+                                      :disabled="
+                                        isDisabled2(day[0].houseOrderId)
+                                      "
                                       :value="day[0].houseOrderId"
                                       @click="clickTwo"
                                     />
                                     <label
                                       class="btn btn-light one"
                                       for="option1"
+                                      :style="[
+                                        {
+                                          backgroundColor: isDisabled2(
+                                            day[0].houseOrderId
+                                          )
+                                            ? '#FFFFFF'
+                                            : '',
+                                          color: isDisabled2(
+                                            day[0].houseOrderId
+                                          )
+                                            ? 'rgba(184, 187, 189, 0.592)'
+                                            : 'black'
+                                        }
+                                      ]"
                                       >{{ day[0].houseOrderTime }}天后</label
                                     >
                                   </div>
@@ -260,7 +312,9 @@
                                       name="options"
                                       v-model="selectedOption2"
                                       id="option2"
-                                      :disabled="isDisabled2('option2Two')"
+                                      :disabled="
+                                        isDisabled2(day[1].houseOrderId)
+                                      "
                                       autocomplete="off"
                                       :value="day[1].houseOrderId"
                                       @click="clickTwo"
@@ -268,6 +322,20 @@
                                     <label
                                       class="btn btn-light one"
                                       for="option2"
+                                      :style="[
+                                        {
+                                          backgroundColor: isDisabled2(
+                                            day[1].houseOrderId
+                                          )
+                                            ? 'white'
+                                            : '',
+                                          color: isDisabled2(
+                                            isDisabled2(day[1].houseOrderId)
+                                          )
+                                            ? 'rgba(184, 187, 189, 0.592)'
+                                            : 'black'
+                                        }
+                                      ]"
                                       >{{ day[1].houseOrderTime }}天后</label
                                     >
                                   </div>
@@ -279,13 +347,31 @@
                                       id="option3"
                                       v-model="selectedOption2"
                                       autocomplete="off"
-                                      :disabled="isDisabled2('option2Three')"
+                                      :disabled="
+                                        isDisabled2(day[2].houseOrderId)
+                                      "
                                       :value="day[2].houseOrderId"
                                       @click="clickTwo"
                                     />
                                     <label
                                       class="btn btn-light one"
                                       for="option3"
+                                      :style="[
+                                        {
+                                          backgroundColor: isDisabled2(
+                                            day[2].houseOrderId
+                                          )
+                                            ? 'white'
+                                            : ''
+                                        },
+                                        {
+                                          color: isDisabled2(
+                                            day[2].houseOrderId
+                                          )
+                                            ? 'rgba(184, 187, 189, 0.592)'
+                                            : 'black'
+                                        }
+                                      ]"
                                       >{{ day[2].houseOrderTime }}天后</label
                                     >
                                   </div>
@@ -296,7 +382,9 @@
                                       name="options"
                                       v-model="selectedOption2"
                                       id="option4"
-                                      :disabled="isDisabled2('option2Four')"
+                                      :disabled="
+                                        isDisabled2(day[3].houseOrderId)
+                                      "
                                       autocomplete="off"
                                       :value="day[3].houseOrderId"
                                       @click="clickTwo"
@@ -304,6 +392,22 @@
                                     <label
                                       class="btn btn-light one"
                                       for="option4"
+                                      :style="[
+                                        {
+                                          backgroundColor: isDisabled2(
+                                            day[3].houseOrderId
+                                          )
+                                            ? 'white'
+                                            : ''
+                                        },
+                                        {
+                                          color: isDisabled2(
+                                            day[3].houseOrderId
+                                          )
+                                            ? 'rgba(184, 187, 189, 0.592)'
+                                            : 'black'
+                                        }
+                                      ]"
                                       >{{ day[3].houseOrderTime }}天后</label
                                     >
                                   </div>
@@ -317,7 +421,7 @@
                             <div class="modal-footer">
                               <button
                                 type="button"
-                                class="btn btn-secondary"
+                                class="btn btn-secondary cancel-preview"
                                 data-bs-dismiss="modal"
                               >
                                 取消
@@ -338,6 +442,67 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Button trigger modal -->
+    <button
+      type="button"
+      class="btn btn-primary uniqueButton"
+      data-bs-toggle="modal"
+      data-bs-target="#uniqueModal"
+    >
+      Launch demo modal
+    </button>
+    <button
+      type="button"
+      id="yun"
+      class="btn btn-primary uniqueButton"
+      data-bs-toggle="modal"
+      data-bs-target="#exampleModal"
+    >
+      Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="uniqueModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">温馨提示</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            检测到您有其他订单在同一时段可能会产生您的行程冲突，确定要继续吗
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              @click="rePreview"
+            >
+              重新预约
+            </button>
+            <button
+              type="button"
+              class="btn bg-dark text-light"
+              @click="continueDo"
+            >
+              继续操作
+            </button>
           </div>
         </div>
       </div>
@@ -380,7 +545,7 @@
               <div class="row">
                 <div class="col-md-6 nameCommenter">
                   <img
-                    src="https://tse3-mm.cn.bing.net/th/id/OIP-C.XnNffgb1NFyj1bxHEXyzsQAAAA?w=210&h=210&c=7&r=0&o=5&dpr=2&pid=1.7"
+                    :src="commentt[0].userPic"
                     alt="头像"
                     class="commenter rounded-1"
                   />
@@ -423,7 +588,7 @@
                   <div class="row">
                     <div class="col-md-4 nameCommenter">
                       <img
-                        src="https://tse3-mm.cn.bing.net/th/id/OIP-C.XnNffgb1NFyj1bxHEXyzsQAAAA?w=210&h=210&c=7&r=0&o=5&dpr=2&pid=1.7"
+                        :src="comment.userPic"
                         alt="头像"
                         class="commenter rounded-1"
                       />
@@ -519,6 +684,7 @@ import {
   houseManageTimeService,
   houseOrderTimeService
 } from '@/api/house'
+import { userAskOrderService } from '@/api/user'
 import { onUnmounted } from 'vue'
 onUnmounted(() => {
   $('.modal-backdrop').remove()
@@ -537,7 +703,7 @@ import cloneDeep from 'lodash/cloneDeep'
 const timeStore = useTimeStore()
 const userStore = useUserStore()
 const router = useRouter()
-const selectedOption1 = ref('')
+const selectedOption1 = ref(null)
 const desc1 = ref('')
 const comments = ref()
 const areaReply = ref()
@@ -562,6 +728,9 @@ const changeIndicate = (index) => {
     indicate.value[index] = false
   }
 }
+const rePreview = () => {
+  $('#yun').click()
+}
 const nestedArray = ref()
 const getCommentWay = (comments) => {
   nestedArray.value = comments.reduce((accumulator, currentObject) => {
@@ -585,20 +754,12 @@ const getCommentWay = (comments) => {
   console.log(nestedArray.value)
 }
 
+const day = ref([])
 const desc2 = ref('')
 const inputComment = ref()
-const selectedOption2 = ref('')
-let disabledOptions1 = reactive({
-  option1One: false,
-  option1Two: false,
-  option1Three: false
-})
-let disabledOptions2 = reactive({
-  option2One: false,
-  option2Two: false,
-  option2Three: false,
-  option2Four: false
-})
+const selectedOption2 = ref(null)
+const time = ref([])
+const flagJudge = ref(false)
 const copy = ref({
   commentId: null,
   userId: null,
@@ -617,8 +778,14 @@ const declareComment = async () => {
   temp.value.houseId = house.value.skuId
   temp.value.content = inputComment.value.value
   temp.value.receiverId = 0
+
+  console.log(
+    '这是================================' + JSON.stringify(temp.value)
+  )
   const res = await houseDeclareCommentService(temp.value)
+
   temp.value = res.data.data
+  temp.value.nickname = userStore.name
   nestedArray.value.push([temp.value])
   inputComment.value.value = ''
   ElMessage.success('评论发布成功')
@@ -635,8 +802,17 @@ const replyComment = async (comment) => {
   temp.value.houseId = house.value.skuId
   temp.value.content = areaReply.value.value
   temp.value.receiverId = comment.commentId
+  console.log(
+    '这是================================' + JSON.stringify(temp.value)
+  )
+  let hName = temp.value.nickname
   const res = await houseDeclareCommentService(temp.value)
   temp.value = res.data.data
+  temp.value.nickname = userStore.name
+  temp.value.receiverName = hName
+  console.log(
+    '这是================================' + JSON.stringify(temp.value)
+  )
   if (comment.parentId != '') {
     console.log('这是打印-->' + comment.parentId)
     const parentArray = nestedArray.value.find(
@@ -655,17 +831,6 @@ const replyComment = async (comment) => {
 
   ElMessage.success('评论回复成功')
 }
-const disabledOptions1Copy = reactive({
-  option1One: false,
-  option1Two: false,
-  option1Three: false
-})
-const disabledOptions2Copy = reactive({
-  option2One: false,
-  option2Two: false,
-  option2Three: false,
-  option2Four: false
-})
 
 const isDisabled1 = (option) => {
   // Return the disabled status for the given option
@@ -686,18 +851,6 @@ const temp = ref({
   receiverId: null
 })
 
-const disabledValues1 = reactive({
-  option1One: 1,
-  option1Two: 2,
-  option1Three: 3
-})
-const disabledValues2 = reactive({
-  option2One: 1,
-  option2Two: 2,
-  option2Three: 3,
-  option2Four: 4
-})
-
 const house = ref([])
 house.value = timeStore.house
 const previews = ref([])
@@ -711,7 +864,8 @@ const getAfterTime = () => {
   //4. 测试
   return date.toLocaleString()
 }
-
+let startTime = ''
+let endTime = ''
 const getAfterDate = () => {
   //1.获取当前日期
   let date = new Date()
@@ -724,7 +878,60 @@ const getAfterDate = () => {
   return date.toLocaleString()
 }
 
+function extractTimeFromDate(dateString) {
+  // 将日期时间字符串转换为Date对象
+  const dateObject = new Date(dateString)
+
+  // 从Date对象中提取小时和分钟，并用padStart确保它们是两位数
+  const hours = dateObject.getHours().toString().padStart(2, '0')
+  const minutes = dateObject.getMinutes().toString().padStart(2, '0')
+
+  // 返回格式化后的时分字符串
+  return `${hours}:${minutes}`
+}
+
+function compareTimeStringsMax(timeString1, timeString2) {
+  // 从时分字符串中提取小时和分钟，并转换为数字
+  const [hours1, minutes1] = timeString1.split(':').map(Number)
+  const [hours2, minutes2] = timeString2.split(':').map(Number)
+  // 比较小时和分钟，返回相应的结果字符串
+  if (hours1 < hours2 || (hours1 === hours2 && minutes1 < minutes2)) {
+    return timeString2
+  } else {
+    return timeString1
+  }
+}
+function compareTimeStringsMin(timeString1, timeString2) {
+  // 从时分字符串中提取小时和分钟，并转换为数字
+  const [hours1, minutes1] = timeString1.split(':').map(Number)
+  const [hours2, minutes2] = timeString2.split(':').map(Number)
+  // 比较小时和分钟，返回相应的结果字符串
+  if (hours1 < hours2 || (hours1 === hours2 && minutes1 < minutes2)) {
+    return timeString1
+  } else {
+    return timeString2
+  }
+}
+function compareTimeStrings(timeString1, timeString2) {
+  // 从时分字符串中提取小时和分钟，并转换为数字
+  const [hours1, minutes1] = timeString1.split(':').map(Number)
+  const [hours2, minutes2] = timeString2.split(':').map(Number)
+  // 比较小时和分钟，返回相应的结果字符串
+  if (hours1 > hours2 || (hours1 === hours2 && minutes1 > minutes2)) {
+    return 1
+  } else {
+    return -1
+  }
+}
+const continueDo = async () => {
+  const res = await insertPreviewService(order)
+  order.orderSkuId = res.data.data.orderSkuId
+  timeStore.order = order
+  console.log(res.data)
+  router.replace('/pay')
+}
 function getDaysDifference(dateString1, dateString2) {
+  //感觉这里有问题
   // 将日期字符串转换为统一的格式（例如 ISO 格式）
   const formattedDate1 = dateString1.replace(/-/g, '/')
   const formattedDate2 = dateString2.replace(/-/g, '/')
@@ -757,8 +964,7 @@ const getTime = () => {
 
   return todayDate
 }
-const time = ref([])
-const day = ref([])
+
 const order = reactive({
   //主人id
   userId: userStore.userId,
@@ -769,6 +975,7 @@ const order = reactive({
   orderCreateTime: getTime(),
   orderBadTime: getAfterTime(),
   orderEndTime: null,
+  orderOverTime: null,
   description: '',
   skuId: house.value.skuId,
   totalPrice: 0.1,
@@ -777,12 +984,22 @@ const order = reactive({
 })
 const timeLength = ref(0)
 let orderJudge
-const clickPreview = async () => {
-  const res = await judgeOrderService(order)
+const clickPreview = async (skuId) => {
+  const res = await judgeOrderService(skuId)
   orderJudge = res.data.data
   console.log(res.data)
 }
-const variable = ref(2)
+const getTimeFromRange = (timeRange) => {
+  const [startStr, endStr] = timeRange.split('~')
+  startTime = startStr
+  endTime = endStr
+}
+let disabledOptions1
+let disabledOptions2
+let disabledOptions1Copy
+let disabledOptions2Copy
+
+const variable = ref(1)
 const init = async () => {
   console.log(house.value.skuId)
   const bes = await houseManageTimeService(house.value.skuId)
@@ -792,10 +1009,35 @@ const init = async () => {
   console.log(
     JSON.stringify(bes.data.data) + '--->' + JSON.stringify(ses.data.data)
   )
+  console.log(time.value[0].id)
+  disabledOptions1 = reactive({
+    [String(time.value[0].id)]: false,
+    [String(time.value[1].id)]: false,
+    [String(time.value[2].id)]: false
+  })
+  disabledOptions2 = reactive({
+    [String(day.value[0].houseOrderId)]: false,
+    [String(day.value[1].houseOrderId)]: false,
+    [String(day.value[2].houseOrderId)]: false,
+    [String(day.value[3].houseOrderId)]: false
+  })
+  disabledOptions1Copy = reactive({
+    [String(time.value[0].id)]: false,
+    [String(time.value[1].id)]: false,
+    [String(time.value[2].id)]: false
+  })
+  disabledOptions2Copy = reactive({
+    [String(day.value[0].houseOrderId)]: false,
+    [String(day.value[1].houseOrderId)]: false,
+    [String(day.value[2].houseOrderId)]: false,
+    [String(day.value[3].houseOrderId)]: false
+  })
+  console.log(disabledOptions1['1'])
 
   const res = await previewSearchService(house.value.skuId)
   const ase = await houseCommentService(house.value.skuId)
   comments.value = ase.data.data
+  console.log(comments.value)
   getCommentWay(comments.value)
   console.log(ase.data.data)
   for (const h of nestedArray.value) {
@@ -808,30 +1050,58 @@ const init = async () => {
 
   previews.value = res.data.data
   console.log(variable.value + '被点击的------------》')
-  order.totalPrice = previews.value.find(
-    (obj) => obj.orderSpuId == variable.value
-  ).reservePrice
+  order.totalPrice = previews.value[0].reservePrice
+  flagJudge.value = true
 }
 init()
+
 const previewOrder = async () => {
-  if (order.orderSpuId == 0 || timeLength.value == 0) {
+  if (selectedOption1.value == null || selectedOption2.value == null) {
     ElMessage.error('必选选项为空')
   } else {
     order.orderEndTime = getAfterDate()
     console.log(order)
+    let orderEndTime
+    let orderStartTime
     order.description =
       $('.name-title').text() + '预约时间:' + desc1.value + '-->' + desc2.value
     console.log(order.description)
+    console.log(variable.value + '___________________' + timeLength.value)
+    const res1 = await userAskOrderService(userStore.userId)
+    const opp = time.value.find((obj) => obj.id == variable.value)
+    console.log(opp + '测试对象')
+    getTimeFromRange(opp.houseTimeType)
+    for (const option of res1.data.data) {
+      orderStartTime = extractTimeFromDate(option.orderEndTime)
+      orderEndTime = extractTimeFromDate(option.orderOverTime)
+      if (
+        compareTimeStrings(
+          compareTimeStringsMin(orderStartTime, startTime),
+          compareTimeStringsMax(orderEndTime, endTime)
+        ) == -1 &&
+        getDaysDifference(getTime(), option.orderEndTime) == timeLength.value
+      ) {
+        $('.cancel-preview')[0].click()
+        $('.uniqueButton')[0].click()
+        break
+      }
+    }
+    $('.cancel-preview')[0].click()
     const res = await insertPreviewService(order)
     order.orderSkuId = res.data.data.orderSkuId
     timeStore.order = order
     console.log(res.data)
-    router.push('/pay')
+    router.replace('/pay')
   }
 }
+
 const clickOne = (e) => {
   {
     variable.value = e.target.value
+    let ooj = time.value.find((obj) => obj.id == e.target.value)
+    getTimeFromRange(ooj.houseTimeType)
+    let orderStartTime
+    let orderEndTime
     order.totalPrice = previews.value.find(
       (obj) => obj.orderSpuId == variable.value
     ).reservePrice
@@ -844,14 +1114,26 @@ const clickOne = (e) => {
     for (const option of orderJudge) {
       //看到这里了
       // 判断某个属性是否等于某个值
-      for (let [key, value] of Object.entries(disabledValues2)) {
+      for (let dd of day.value) {
+        orderStartTime = extractTimeFromDate(option.orderEndTime)
+        orderEndTime = extractTimeFromDate(option.orderOverTime)
+        console.log(
+          getDaysDifference(getTime(), option.orderEndTime) +
+            '====>' +
+            compareTimeStringsMax(orderEndTime, endTime)
+        )
         if (
-          option.orderSpuId == order.orderSpuId &&
-          getDaysDifference(getTime(), option.orderEndTime) == value
+          compareTimeStrings(
+            compareTimeStringsMin(orderStartTime, startTime),
+            compareTimeStringsMax(orderEndTime, endTime)
+          ) == -1 &&
+          getDaysDifference(getTime(), option.orderEndTime) == dd.houseOrderTime
         ) {
-          disabledOptions2[key] = true
-          console.log(key + '被禁用了')
-
+          disabledOptions2[dd.houseOrderId] = true
+          if (selectedOption2.value == dd.houseOrderId) {
+            selectedOption2.value = null
+          }
+          console.log(dd.houseOrderTime + '被禁用了')
           // 获取对应值的单选框对象
         }
       }
@@ -860,21 +1142,35 @@ const clickOne = (e) => {
 }
 const clickTwo = (e) => {
   {
-    timeLength.value = e.target.value
+    timeLength.value = day.value.find(
+      (obj) => obj.houseOrderId == e.target.value
+    ).houseOrderTime
+    let orderStartTime
+    let orderEndTime
+    let ooj = day.value.find((obj) => obj.houseOrderId == e.target.value)
+    console.log('现在的是天数' + timeLength.value)
     Object.assign(disabledOptions2, disabledOptions2Copy)
     Object.assign(disabledOptions1, disabledOptions1Copy)
     desc2.value = e.target.nextElementSibling.innerText
     console.log(desc2.value)
-
     for (const option of orderJudge) {
-      for (let [key, value] of Object.entries(disabledValues1)) {
+      for (let tt of time.value) {
+        orderStartTime = extractTimeFromDate(option.orderEndTime)
+        orderEndTime = extractTimeFromDate(option.orderOverTime)
+        getTimeFromRange(tt.houseTimeType)
         if (
+          compareTimeStrings(
+            compareTimeStringsMin(orderStartTime, startTime),
+            compareTimeStringsMax(orderEndTime, endTime)
+          ) == -1 &&
           getDaysDifference(getTime(), option.orderEndTime) ==
-            timeLength.value &&
-          option.orderSpuId == value
+            ooj.houseOrderTime
         ) {
-          disabledOptions1[key] = true
-          console.log(key + '被禁用了')
+          if (selectedOption1.value == tt.id) {
+            selectedOption1.value = null
+          }
+          disabledOptions1[tt.id] = true
+          console.log(tt.id + '被禁用了')
 
           // 获取对应值的单选框对象
         }
@@ -991,6 +1287,9 @@ const initFocus = async () => {
   color: rgb(255, 255, 255);
   padding: 0.1rem;
 }
+.uniqueButton {
+  display: none;
+}
 
 .lag {
   color: brown;
@@ -1086,4 +1385,3 @@ const initFocus = async () => {
   justify-content: end;
 }
 </style>
-<script setup></script>

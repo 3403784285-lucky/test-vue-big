@@ -31,38 +31,57 @@
       type="radio"
       class="btn-check"
       name="options"
+      value="北京"
       id="option1"
       autocomplete="off"
+      v-model="selectOption"
       checked
     />
-    <label class="btn btn-secondary" for="option1">北京</label>
+    <label
+      class="btn btn-secondary searchKey"
+      for="option1"
+      @click="clickSelected"
+      >北京</label
+    >
 
     <input
       type="radio"
       class="btn-check"
       name="options"
       id="option2"
+      v-model="selectOption"
+      value="上海"
       autocomplete="off"
     />
-    <label class="btn btn-secondary" for="option2">上海</label>
+    <label class="btn btn-secondary" for="option2" @click="clickSelected"
+      >上海</label
+    >
 
     <input
       type="radio"
       class="btn-check"
       name="options"
       id="option3"
+      v-model="selectOption"
+      value="上海"
       autocomplete="off"
     />
-    <label class="btn btn-secondary" for="option3">深圳</label>
+    <label class="btn btn-secondary" for="option3" @click="clickSelected"
+      >深圳</label
+    >
 
     <input
       type="radio"
       class="btn-check"
       name="options"
       id="option4"
+      v-model="selectOption"
+      :value="null"
       autocomplete="off"
     />
-    <label class="btn btn-secondary" for="option4">长沙</label>
+    <label class="btn btn-secondary" for="option4" @click="clickSelected"
+      >其他</label
+    >
     <div class="row">
       <!-- <div class="col-md-1 search-part">
         <div class="logo border border-dark rounded-2 text-center">新房</div>
@@ -75,16 +94,18 @@
         <div class="input-group mb-3">
           <input
             type="text"
-            class="form-control"
+            class="form-control searchInput"
             placeholder="输入你要搜索的房屋名称"
             aria-label="Recipient's username"
             aria-describedby="button-addon2"
+            @keydown="inputSearchWatch"
           />
           <div class="input-group-append">
             <button
               class="btn btn-outline-secondary"
               type="button"
               id="button-addon2"
+              @click="clickSelected"
             >
               搜索
             </button>
@@ -120,7 +141,7 @@
       <div class="row justify-content-between">
         <div
           class="col-md-3 small-part"
-          v-for="house in houses"
+          v-for="house in houses.slice(0, h)"
           :key="house.skuId"
           @click="clickHouse(house)"
         >
@@ -155,25 +176,57 @@
         <div class="col-md-3"></div>
       </div>
     </div> -->
+    <div
+      v-if="h < houses.length"
+      class="row justify-content-center more moreOther"
+      @click="clickMore"
+    >
+      点击查看更多
+    </div>
+    <div v-else class="row justify-content-center noMore">没有更多了</div>
   </div>
 </template>
 <script setup>
 import dropDown from '../../components/drop-down.vue'
-import { houseDetailService } from '@/api/house'
-import { onBeforeMount, ref } from 'vue'
+import { houseDetailService, searchContentByKeyService } from '@/api/house'
+import { onBeforeMount, ref, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTimeStore } from '@/stores/index'
-
+import { debounce } from 'lodash'
+import $ from 'jquery'
 // 在setup外部声明
 //let houses
-const houses = ref({})
+const houses = ref([])
 const router = useRouter()
 const timeStore = useTimeStore()
+const selectOption = ref()
 // setup函数
 onBeforeMount(async () => {
   const res = await houseDetailService()
   houses.value = res.data.data
   console.log(houses.value)
+})
+const clickSelected = () => {
+  inputSearchWatch()
+}
+const h = ref(8)
+const clickMore = () => {
+  h.value += 8
+}
+const inputSearchWatchCopy = async () => {
+  console.log('触动了')
+  let keySmall = selectOption.value
+
+  const res = await searchContentByKeyService(
+    $('.searchInput')[0].value,
+    keySmall
+  )
+  houses.value = res.data.data
+}
+const inputSearchWatch = debounce(inputSearchWatchCopy, 500)
+onUnmounted(() => {
+  // 移除组件时，取消定时器
+  inputSearchWatch.cancel()
 })
 const clickHouse = (value) => {
   router.push('/house/channel')
@@ -197,6 +250,7 @@ const clickHouse = (value) => {
   margin-bottom: 3vh;
   margin-top: 3vh;
 }
+
 .back-ground {
   width: 100%;
   height: 75vh;
@@ -225,6 +279,12 @@ const clickHouse = (value) => {
 .upper {
   margin-left: 10vw;
 }
+.noMore {
+  font-size: 0.9rem;
+  color: rgb(167, 161, 161);
+  font-weight: 900;
+  font-family: 'YouYuan';
+}
 .first {
   width: 60vw;
 }
@@ -238,6 +298,9 @@ const clickHouse = (value) => {
   font-size: 1.5rem;
   font-family: 'YouYuan';
   font-weight: 900;
+}
+.moreOther {
+  margin-bottom: 2rem;
 }
 .small-part {
   width: 18vw;

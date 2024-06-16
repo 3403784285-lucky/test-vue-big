@@ -6,8 +6,9 @@
  * @FilePath: \test-vue-big\src\router\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { createRouter, createWebHistory } from 'vue-router'
-import { useUserStore } from '@/stores/index'
+
+import { createRouter, createWebHistory, onBeforeRouteUpdate } from 'vue-router'
+// import { useUserStore } from '@/stores/index'
 
 //创建router实例
 // 配置路由模式：
@@ -68,30 +69,40 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'),
-      redirect: '/house/second',
+      redirect: '/house/manage',
+      meta: { uniqueId: 'home' }, // 添加一个唯一标识符
       children: [
         {
           path: '/house/channel',
           // 详细描述
-          component: () => import('@/views/house/HouseChannel.vue')
+          component: () => import('@/views/house/HouseChannel.vue'),
+          meta: { uniqueId: 'homeChannel' } // 添加一个唯一标识符
         },
         {
           path: '/house/new',
+          meta: { uniqueId: 'homeNew' }, // 添加一个唯一标识符
+
           // 详细描述
           component: () => import('@/views/house/HouseNew.vue')
         },
         {
           path: '/house/second',
+          meta: { uniqueId: 'homeSecond' }, // 添加一个唯一标识符
+
           // 详细描述
           component: () => import('@/views/house/HouseSecond.vue')
         },
         {
           path: '/house/declare',
+          meta: { uniqueId: 'homeDeclare' }, // 添加一个唯一标识符
+
           // 详细描述
           component: () => import('@/views/house/HouseDeclare.vue')
         },
         {
           path: '/house/manage',
+          meta: { uniqueId: 'homeManage' }, // 添加一个唯一标识符
+
           // 新房
           component: () => import('@/views/house/HouseManage.vue')
         }
@@ -104,12 +115,22 @@ const router = createRouter({
 // 如果是false，拦回from的页面；
 // 具体路径或是路径对象拦截到对应的地址
 // 前置首位
-// router.beforeEach(async (to) => {
+// router.beforeEach((to, from, next) => {
 //   //如果没有token，且访问的是非登录页
-//   const userStore = useUserStore()
-//   console.log(userStore.token)
+//   // const userStore = useUserStore()
+//   // console.log(userStore.token)
 
-//   if (userStore.token == '' && to.path !== '/user/login') return '/user/login'
+//   // if (userStore.token == '' && to.path !== '/user/login') return '/user/login'
+//   if (to.path !== from.path) {
+//     location.reload()
+//   }
+//   next()
 // })
 
+router.afterEach((to, from) => {
+  if (to.path == '/pay' && from.path != '/') {
+    location.reload()
+    console.log(to.path + '------' + from.path)
+  }
+})
 export default router

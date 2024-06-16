@@ -136,15 +136,17 @@ import {
   userDoingService,
   userFinishService,
   userReturnService,
-  userDeleteService
+  userDeleteService,
+  userCancelService
 } from '../../api/user'
 import { houseCertainService } from '../../api/house'
 import { useUserStore, useTimeStore } from '@/stores/index'
-import { ref, nextTick, watchEffect, onUnmounted } from 'vue'
+import { ref, watchEffect, onUnmounted } from 'vue'
 import $ from 'jquery'
 import { useRouter } from 'vue-router'
 //这里是数组
 const orders = ref({})
+
 const userStore = useUserStore()
 const router = useRouter()
 const unique = ref(null)
@@ -219,6 +221,14 @@ const getFinish = async () => {
   const res = await userFinishService(userStore.userId)
   orders.value = res.data.data
 }
+const getCancel = async () => {
+  timeStore.finish = '查看详情'
+  timeStore.cancel = '删除订单'
+  const res = await userCancelService(userStore.userId)
+  orders.value = res.data.data
+}
+
+timeStore.activeTab = '待支付'
 
 const getUnPay = async () => {
   timeStore.finish = '前往支付'
@@ -270,8 +280,10 @@ const judgeOrder = (activeTab) => {
     getUnPay()
   } else if (activeTab == '进行中') {
     getDoing()
-  } else {
+  } else if (activeTab == '已完成') {
     getFinish()
+  } else {
+    getCancel()
   }
 }
 judgeOrder(timeStore.activeTab)
@@ -345,7 +357,7 @@ const goPay = (order) => {
 //前往评价
 const goComment = async (order) => {
   //查询特定房子信息
-  const res = await houseCertainService(order)
+  const res = await houseCertainService(order.skuId)
   timeStore.house = res.data.data
   router.push('/house/channel')
 }

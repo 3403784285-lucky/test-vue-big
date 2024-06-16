@@ -102,7 +102,7 @@
                     <div class="modal-footer">
                       <button
                         type="button"
-                        class="btn btn-secondary"
+                        class="btn btn-secondary thinkThink"
                         data-bs-dismiss="modal"
                       >
                         考虑考虑
@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { onUnmounted, ref, nextTick } from 'vue'
+import { onUnmounted, ref, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import $ from 'jquery'
 import { userAllowanceService, userPayService } from '../../api/user'
@@ -138,31 +138,35 @@ const userStore = useUserStore()
 onUnmounted(() => {
   $('.modal-backdrop').remove()
   $('body').removeClass('modal-open')
-
   for (const timerElement of intervalId.value) {
     clearTimeout(timerElement)
   }
   intervalId.value = []
 })
-
 const router = useRouter()
+
 const intervalId = ref([])
 const payChoose = async () => {
   console.log(order)
   order.password = $('.pass').eq(0).val()
-  const res = await userPayService(order)
-  if (res.data.message == 'success') {
-    ElMessage.success('支付成功')
-    router.push('/house/manage')
-  } else if (res.data.message == 'time') {
-    ElMessage.warning('该订单已失效，请重新下单吧')
-  } else if (res.data.message == 'error') {
-    ElMessage.error('密码错误，请重新输入')
-  } else if (res.data.message == 'fail') {
-    ElMessage.warning('您的余额不足哦')
+  if (order.password == '' || order.password == null) {
+    ElMessage.warning('密码不能为空')
+  } else {
+    const res = await userPayService(order)
+    if (res.data.message == 'success') {
+      ElMessage.success('支付成功')
+      router.push('/house/manage')
+    } else if (res.data.message == 'time') {
+      ElMessage.warning('该订单已失效，请重新下单吧')
+    } else if (res.data.message == 'error') {
+      ElMessage.error('密码错误，请重新输入')
+    } else if (res.data.message == 'fail') {
+      ElMessage.warning('您的余额不足哦')
+    }
   }
 }
 const giveUp = () => {
+  $('.thinkThink').click()
   router.push('/house/manage')
 }
 function padLeft(number) {

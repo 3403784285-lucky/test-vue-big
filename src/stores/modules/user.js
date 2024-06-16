@@ -12,6 +12,8 @@ export const useUserStore = defineStore(
     const setToken = (newValue) => {
       token.value = newValue
     }
+    const name = ref()
+    const pic = ref()
     const removeToken = () => {
       token.value = ''
     }
@@ -20,6 +22,8 @@ export const useUserStore = defineStore(
       userId,
       setToken,
       removeToken,
+      name,
+      pic,
       email
     }
   },

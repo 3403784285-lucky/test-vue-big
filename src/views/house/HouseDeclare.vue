@@ -208,27 +208,28 @@ const houseModel = ref({
 const lightFlag = ref(0)
 const declareHouse = async () => {
   for (const key in houseModel.value) {
+    lightFlag.value = 0
     if (Object.prototype.hasOwnProperty.call(houseModel.value, key)) {
       // 检查属性的值是否为空或者为空字符串
       if (!houseModel.value[key] || houseModel.value[key] == '') {
         // 属性值为空或者为空字符串，执行相应的提示
         ElMessage.warning(key + '不能为空')
         houseModel.value[key]
+        lightFlag.value = 1
         break
+        //有大问题
         // 这里可以添加你的提示逻辑，例如显示错误信息、弹窗等
-      } else {
-        if (lightFlag.value == 0) {
-          const res = await houseDeclareService(houseModel.value)
-          console.log(res.data)
-          if (res.data.message == 'confirmError') {
-            ElMessage.error('验证码错误')
-          } else {
-            ElMessage.success('发布成功，请耐心等待小云烛的审核...')
-            router.push('/')
-          }
-        }
-        break
       }
+    }
+  }
+  if (lightFlag.value == 0) {
+    const res = await houseDeclareService(houseModel.value)
+    console.log(res.data)
+    if (res.data.message == 'confirmError') {
+      ElMessage.error('验证码错误')
+    } else {
+      ElMessage.success('发布成功，请耐心等待小云烛的审核...')
+      router.push('/')
     }
   }
 }

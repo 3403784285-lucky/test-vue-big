@@ -36,57 +36,17 @@ export const insertPreviewService = ({
 }
 
 //获取订单
-export const judgeOrderService = ({
-  userId,
-  orderSpuId,
-  orderCreateTime,
-  orderStatus,
-  orderBadTime,
-  orderEndTime,
-  description,
-  skuId,
-  totalPrice
-}) => {
-  return request.post('/house/preview2', {
-    userId,
-    orderSpuId,
-    orderCreateTime,
-    orderStatus,
-    orderBadTime,
-    orderEndTime,
-    description,
-    skuId,
-    totalPrice
-  })
+export const judgeOrderService = (skuId) => {
+  return request.post('/house/preview2', { skuId })
 }
 //模糊查询
 
 //条件选择
 
 //查询某个房子信息
-export const houseCertainService = ({
-  orderSkuId,
-  userId,
-  orderSpuId,
-  orderCreateTime,
-  orderStatus,
-  orderBadTime,
-  orderEndTime,
-  description,
-  skuId,
-  totalPrice
-}) => {
+export const houseCertainService = (skuId) => {
   return request.post('/house/certain', {
-    orderSkuId,
-    userId,
-    orderSpuId,
-    orderCreateTime,
-    orderStatus,
-    orderBadTime,
-    orderEndTime,
-    description,
-    skuId,
-    totalPrice
+    skuId
   })
 }
 
@@ -262,4 +222,24 @@ export const houseManageTimeService = (skuId) => {
 //搜索特定房屋预约时间大
 export const houseOrderTimeService = (skuId) => {
   return request.post('/house/orderTime', { skuId })
+}
+
+//查询某个用户关注的房屋
+export const houseSearchFocusedUserService = (userId) => {
+  return request.post('/house/searchUserFocus', { userId })
+}
+
+//搜索某个用户发布的房源
+export const houseSearchDeclaredUserService = (userId) => {
+  return request.post('/house/searchUserDeclare', { userId })
+}
+
+//搜索房子
+export const searchContentByKeyService = (searchBig, searchSmall) => {
+  return request.post('/house/searchByKey', { searchBig, searchSmall })
+}
+
+//筛选搜素
+export const selectedOptionService = (search1, search2, search3) => {
+  return request.post('/house/searchOption', { search1, search2, search3 })
 }

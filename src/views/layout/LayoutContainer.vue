@@ -47,13 +47,15 @@
                 <div id="personProfileNav">
                   <img
                     class="img-fluid rounded-3"
-                    src="https://tse3-mm.cn.bing.net/th/id/OIP-C.XnNffgb1NFyj1bxHEXyzsQAAAA?w=210&h=210&c=7&r=0&o=5&dpr=2&pid=1.7"
+                    :src="userStore.pic"
                     alt="头像"
                   />
                 </div>
               </div>
               <div class="col-sm-6 nickname">
-                <div class="text-light" @click="clickName">小星星</div>
+                <div class="text-light" @click="clickName">
+                  {{ userStore.name }}
+                </div>
               </div>
             </div>
           </div>
@@ -67,6 +69,8 @@
 <script setup>
 import '@/assets/css/font.css'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/index'
+const userStore = useUserStore()
 const router = useRouter()
 const clickName = () => {
   router.push('/user')

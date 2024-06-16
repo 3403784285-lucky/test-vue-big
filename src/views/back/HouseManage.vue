@@ -304,32 +304,35 @@
                 <div class="row"></div>
                 <div class="row">
                   <div class="col-md-6">
-                    <label for="inp">预约价格1:</label>
+                    <label for="inpp1">预约价格1:</label>
                     <input
                       type="text"
-                      id="inp"
+                      id="inpp1"
                       v-model="price.priceOne"
                       name="houseOwner"
+                      class="patternPrice"
                     />
                   </div>
                   <div class="col-md-6">
-                    <label for="inp">预约价格2:</label>
+                    <label for="inpp2">预约价格2:</label>
                     <input
                       type="text"
-                      id="inp"
+                      id="inpp2"
                       v-model="price.priceTwo"
                       name="houseOwner"
+                      class="patternPrice"
                     />
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-md-6">
-                    <label for="inp">预约价格3:</label>
+                    <label for="inpp3">预约价格3:</label>
                     <input
                       type="text"
-                      id="inp"
+                      id="inpp3"
                       v-model="price.priceThree"
                       name="houseOwner"
+                      class="patternPrice"
                     />
                   </div>
                 </div>
@@ -388,6 +391,7 @@
                       id="inp"
                       v-model="timeS.timeSmallOne"
                       name="houseOwner"
+                      class="patternTimeSmall"
                     />
                   </div>
                   <div class="col-md-6">
@@ -397,6 +401,7 @@
                       id="inp"
                       v-model="timeS.timeSmallTwo"
                       name="houseOwner"
+                      class="patternTimeSmall"
                     />
                   </div>
                 </div>
@@ -408,6 +413,7 @@
                       id="inp"
                       v-model="timeS.timeSmallThree"
                       name="houseOwner"
+                      class="patternTimeSmall"
                     />
                   </div>
                 </div>
@@ -426,6 +432,7 @@
                       id="inp"
                       v-model="timeB.timeBigOne"
                       name="houseOwner"
+                      class="patternTimeBig"
                     />
                   </div>
                   <div class="col-md-6">
@@ -435,6 +442,7 @@
                       id="inp"
                       v-model="timeB.timeBigTwo"
                       name="houseOwner"
+                      class="patternTimeBig"
                     />
                   </div>
                 </div>
@@ -446,6 +454,7 @@
                       id="inp"
                       v-model="timeB.timeBigThree"
                       name="houseOwner"
+                      class="patternTimeBig"
                     />
                   </div>
                   <div class="col-md-6">
@@ -455,6 +464,7 @@
                       id="inp"
                       v-model="timeB.timeBigFour"
                       name="houseOwner"
+                      class="patternTimeBig"
                     />
                   </div>
                 </div>
@@ -726,42 +736,89 @@ const priceIs = (skuId) => {
   }
   console.log(price.value)
 }
+const flagPrice = ref(0)
 //编辑价格
 const editPrice = async () => {
-  price.value.houseId = tempSkuId
-  price.value.idCopy = ''
-  for (const id of ps) {
-    price.value.idCopy += ',' + id.orderGoodsId
-  }
-  console.log(price.value.idCopy)
-  if (ts.length == 0) {
-    ElMessage.warning('编辑价格之前请先去编辑对应的预约时间哦')
-  } else {
-    tempSpuId.value = ''
-    for (const id of ts) {
-      tempSpuId.value += ',' + id.id
+  const patternPrice = /^[1-9]\d*(\.\d+)?$/
+  for (const t of $('.patternPrice')) {
+    flagPrice.value = 0
+    console.log(t)
+    if (!patternPrice.test(t.value)) {
+      console.log(t.value)
+      ElMessage.warning('预约价格不符合格式(注意用英文的符号哦)')
+      lightFlagBig.value = 1
+      break
     }
-    price.value.spuId = tempSpuId.value
-
-    await houseMoneyEditService(price.value)
-    ElMessage.success('上传成功')
+  }
+  if (flagPrice.value == 0) {
+    price.value.houseId = tempSkuId
+    price.value.idCopy = ''
+    for (const id of ps) {
+      price.value.idCopy += ',' + id.orderGoodsId
+    }
+    console.log(price.value.idCopy)
+    if (ts.length == 0) {
+      ElMessage.warning('编辑价格之前请先去编辑对应的预约时间哦')
+    } else {
+      tempSpuId.value = ''
+      for (const id of ts) {
+        tempSpuId.value += ',' + id.id
+      }
+      price.value.spuId = tempSpuId.value
+      const hhes = await houseMoneyEditService(price.value)
+      console.log(hhes.data.data)
+      ElMessage.success('上传成功')
+      $('.notSave')[1].click()
+      init()
+    }
   }
 }
+const lightFlag = ref(0)
+const lightFlagBig = ref(0)
 const editTime = (skuId) => {
-  timeS.value.houseId = skuId
-  timeB.value.houseId = skuId
-  console.log(ts + '这是ts')
-  timeS.value.idCopy = ''
-  for (const id of ts) {
-    timeS.value.idCopy += ',' + id.id
+  const pattern =
+    /^([1-9]|1[0-9]|2[0-3]):[0-5][0-9]~([1-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
+  const patternTimeBig = /^[1-9]\d*$/
+
+  for (const t of $('.patternTimeSmall')) {
+    lightFlag.value = 0
+    console.log(t)
+    if (!pattern.test(t.value)) {
+      console.log(t.value)
+      ElMessage.warning('预约时分不符合格式')
+      lightFlag.value = 1
+      break
+    }
   }
-  timeB.value.idCopy = ''
-  for (const id of tb) {
-    timeB.value.idCopy += ',' + id.houseOrderId
+  for (const t of $('.patternTimeBig')) {
+    lightFlagBig.value = 0
+    console.log(t)
+    if (!patternTimeBig.test(t.value)) {
+      console.log(t.value)
+      ElMessage.warning('预约日期不符合格式')
+      lightFlagBig.value = 1
+      break
+    }
   }
 
-  editBigTime(new Map(Object.entries(timeB.value)))
-  editSmallTime(new Map(Object.entries(timeS.value)))
+  if (lightFlagBig.value == 0 && lightFlag.value == 0) {
+    timeS.value.houseId = skuId
+    timeB.value.houseId = skuId
+    console.log(ts + '这是ts')
+    timeS.value.idCopy = ''
+    for (const id of ts) {
+      timeS.value.idCopy += ',' + id.id
+    }
+    timeB.value.idCopy = ''
+    for (const id of tb) {
+      timeB.value.idCopy += ',' + id.houseOrderId
+    }
+    editBigTime()
+    editSmallTime()
+    ElMessage.success('上传成功')
+    init()
+    $('.notSave')[2].click()
+  }
 }
 //编辑时间
 const editBigTime = async () => {

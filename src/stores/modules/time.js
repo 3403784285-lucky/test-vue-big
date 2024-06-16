@@ -10,12 +10,14 @@ export const useTimeStore = defineStore(
     const order = ref({})
     const finish = ref('')
     const cancel = ref('')
+
     const activeTab = ref('待支付')
     return {
       house,
       order,
       activeTab,
       finish,
+
       cancel
     }
   },

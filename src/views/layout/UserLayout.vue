@@ -18,12 +18,14 @@
               class="nav-link tab-test first"
               id="v-pills-home-tab"
               to="/user/preview"
+              :style="{ backgroundColor: bgColor ? '#afb3af7a' : '#212529' }"
               ><span @click="clickRouter">我的订单</span></router-link
             >
             <router-link
               class="nav-link tab-test"
               id="v-pills-profile-tab"
               to="/user/house"
+              :style="{ backgroundColor: !bgColor ? '#afb3af7a' : '#212529' }"
             >
               <span @click="clickRouter">我的房源</span></router-link
             >
@@ -41,7 +43,7 @@
         </div>
       </div>
       <div class="col-md-10 content-frame">
-        <ul class="nav nav-tabs bg-light choose-nav-one">
+        <ul class="nav nav-tabs bg-light choose-nav-one" v-if="!flagDisabled">
           <li class="nav-item">
             <div
               class="nav-link kid-list list-test1"
@@ -69,15 +71,34 @@
               已完成
             </div>
           </li>
-        </ul>
-        <ul class="nav nav-tabs bg-light choose-nav-two">
           <li class="nav-item">
-            <a class="nav-link kid-list list-test" href="#">我发布的房源</a>
+            <div
+              class="kid-list nav-link list-test1"
+              :class="{ active: timeStore.activeTab == '已取消' }"
+              @click="changeTab('已取消')"
+            >
+              已取消
+            </div>
+          </li>
+        </ul>
+        <ul class="nav nav-tabs bg-light choose-nav-two" v-if="flagDisabled">
+          <li class="nav-item">
+            <div
+              class="nav-link kid-list list-test"
+              :class="{ active: timeStore.activeTab == '我发布的房源' }"
+              @click="changeTab('我发布的房源')"
+            >
+              我发布的房源
+            </div>
           </li>
           <li class="nav-item">
-            <a class="kid-list active nav-link list-test" href="#"
-              >我关注的房源</a
+            <div
+              class="kid-list nav-link list-test"
+              :class="{ active: timeStore.activeTab == '我关注的房源' }"
+              @click="changeTab('我关注的房源')"
             >
+              我关注的房源
+            </div>
           </li>
         </ul>
         <router-view class="view-small"></router-view>
@@ -89,25 +110,27 @@
 <script setup>
 import $ from 'jquery'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 import { useTimeStore } from '@/stores/index'
 const router = useRouter()
 const pushTable = () => {
   router.push('/')
 }
+const flagDisabled = ref(false)
 const timeStore = useTimeStore()
-const clickRouter = (e) => {
-  $('.first').removeClass('first')
-  // 在这里使用 jQuery 选择器选取所有类名为 'tab-test' 的元素
-  // 并设置它们的背景颜色为空字符串，即清除样式
-  $('.tab-test').css('background-color', '')
-
-  // 将原生 DOM 元素转换为 jQuery 对象
-  const $parent = $(e.currentTarget.parentNode)
-
-  // 使用 jQuery 对象的 .css() 方法设置背景颜色
-  $parent.css('background-color', '#ACBFE6')
+const bgColor = ref(true)
+const clickRouter = () => {
+  if (flagDisabled.value) {
+    flagDisabled.value = false
+  } else {
+    flagDisabled.value = true
+  }
+  if (bgColor.value) {
+    bgColor.value = false
+  } else {
+    bgColor.value = true
+  }
 }
-
 const changeTab = (tabName) => {
   $('.list-test').removeClass('active')
   timeStore.activeTab = tabName
@@ -125,12 +148,7 @@ const changeTab = (tabName) => {
   margin-bottom: 1rem;
   margin-left: 0.5rem;
 }
-/* .choose-nav-two {
-  display: none;
-} */
-.choose-nav-two {
-  display: none;
-}
+
 /* Additional styling for fixed-left */
 
 /* Adjust content margin to make room for fixed-left sidebar */
