@@ -1,0 +1,183 @@
+<!-- Sidebar.vue -->
+<template>
+  <div class="container-fluid">
+    <div class="row user-frame">
+      <div class="col-md-2 side-menu">
+        <div class="align-items-start list-user-frame bg-dark">
+          <div class="logo">
+            <i class="iconfont icon-kekeaiaixiaopenzai-" @click="pushTable"></i
+            >穿花云烛展
+          </div>
+          <div
+            class="nav flex-column nav-pills me-3 list-user text-center"
+            id="v-pills-tab"
+            role="tablist"
+            aria-orientation="vertical"
+          >
+            <router-link
+              class="nav-link tab-test first"
+              id="v-pills-home-tab"
+              to="/user/preview"
+              ><span @click="clickRouter">我的订单</span></router-link
+            >
+            <router-link
+              class="nav-link tab-test"
+              id="v-pills-profile-tab"
+              to="/user/house"
+            >
+              <span @click="clickRouter">我的房源</span></router-link
+            >
+            <a
+              class="nav-link tab-test"
+              id="v-pills-messages-tab"
+              data-bs-toggle="pill"
+              href="#v-pills-messages"
+              role="tab"
+              aria-controls="v-pills-messages"
+              aria-selected="false"
+              >我的资料</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="col-md-10 content-frame">
+        <ul class="nav nav-tabs bg-light choose-nav-one">
+          <li class="nav-item">
+            <div
+              class="nav-link kid-list list-test1"
+              :class="{ active: timeStore.activeTab == '待支付' }"
+              @click="changeTab('待支付')"
+            >
+              待支付
+            </div>
+          </li>
+          <li class="nav-item">
+            <div
+              class="kid-list nav-link list-test1"
+              :class="{ active: timeStore.activeTab == '进行中' }"
+              @click="changeTab('进行中')"
+            >
+              进行中
+            </div>
+          </li>
+          <li class="nav-item">
+            <div
+              class="kid-list nav-link list-test1"
+              :class="{ active: timeStore.activeTab == '已完成' }"
+              @click="changeTab('已完成')"
+            >
+              已完成
+            </div>
+          </li>
+        </ul>
+        <ul class="nav nav-tabs bg-light choose-nav-two">
+          <li class="nav-item">
+            <a class="nav-link kid-list list-test" href="#">我发布的房源</a>
+          </li>
+          <li class="nav-item">
+            <a class="kid-list active nav-link list-test" href="#"
+              >我关注的房源</a
+            >
+          </li>
+        </ul>
+        <router-view class="view-small"></router-view>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import $ from 'jquery'
+import { useRouter } from 'vue-router'
+import { useTimeStore } from '@/stores/index'
+const router = useRouter()
+const pushTable = () => {
+  router.push('/')
+}
+const timeStore = useTimeStore()
+const clickRouter = (e) => {
+  $('.first').removeClass('first')
+  // 在这里使用 jQuery 选择器选取所有类名为 'tab-test' 的元素
+  // 并设置它们的背景颜色为空字符串，即清除样式
+  $('.tab-test').css('background-color', '')
+
+  // 将原生 DOM 元素转换为 jQuery 对象
+  const $parent = $(e.currentTarget.parentNode)
+
+  // 使用 jQuery 对象的 .css() 方法设置背景颜色
+  $parent.css('background-color', '#ACBFE6')
+}
+
+const changeTab = (tabName) => {
+  $('.list-test').removeClass('active')
+  timeStore.activeTab = tabName
+}
+</script>
+
+<style scoped>
+.first {
+  background-color: #acbfe6;
+}
+.logo {
+  color: white;
+  font-size: 1.5rem;
+  font-family: 'YouYuan';
+  margin-bottom: 1rem;
+  margin-left: 0.5rem;
+}
+/* .choose-nav-two {
+  display: none;
+} */
+.choose-nav-two {
+  display: none;
+}
+/* Additional styling for fixed-left */
+
+/* Adjust content margin to make room for fixed-left sidebar */
+/* 在线链接服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+@font-face {
+  font-family: '阿里妈妈方圆体 VF Regular';
+  src:
+    url('//at.alicdn.com/wf/webfont/ZFKh9pHaLBHf/DuzVkKxfeI6V.woff2')
+      format('woff2'),
+    url('//at.alicdn.com/wf/webfont/ZFKh9pHaLBHf/YjzFddp87PA1.woff')
+      format('woff');
+  font-display: swap;
+}
+.list-user {
+  width: 100%;
+}
+.content-frame {
+  padding: 0;
+}
+
+.side-menu {
+  padding: 0;
+  height: 100vh;
+}
+.user-frame {
+  padding: 0;
+  height: 100%;
+}
+.list-user-frame {
+  height: 100%;
+  width: 16.5%;
+  padding: 1rem;
+  position: fixed;
+}
+.nav-link {
+  color: white;
+  font-family: '华文楷体';
+  font-size: 1.2rem;
+}
+.choose-nav-one,
+.choose-nav-two {
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+}
+
+.kid-list {
+  color: rgb(16, 15, 15);
+}
+</style>

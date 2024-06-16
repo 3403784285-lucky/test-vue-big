@@ -1,3 +1,6 @@
+
+
+
 /* eslint-env node */
 require('@rushstack/eslint-patch/modern-module-resolution')
 
@@ -19,7 +22,7 @@ module.exports = {
         singleQuote: true, //单引号
         semi: false, //无分号
         printWidth: 80, //每行宽度至多80字符
-        tailingComma: 'none', //不加对象数组最后逗号
+        trailingComma: 'none', //不加对象数组最后逗号
         endOfLine: 'auto' //换行符号不限制（win mac不统一）
       }
     ],
@@ -32,5 +35,12 @@ module.exports = {
     ],
     'vue/no-setup-props-destructure': ['off'], //关闭props结构的校验
     'no-undef': 'error' //未定义变量没有使用警告
+  },
+  globals:{
+    ElMessage:'readonly',
+    ElMessageBox:'readonly',
+    ElLoading:'readonly'
+    
+
   }
 }
