@@ -23,7 +23,7 @@ const router = createRouter({
       component: () => import('@/views/login/LoginPage.vue') //登录页
     },
     {
-      path: '/manager-layout',
+      path: '/manager',
       component: () => import('@/views/layout/ManagerLayout.vue'),
       redirect: 'manage/house',
       children: [

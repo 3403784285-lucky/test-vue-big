@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, onBeforeRouteUpdate } from 'vue-router'
 // import { useUserStore } from '@/stores/index'
 
 //创建router实例
@@ -23,7 +23,7 @@ const router = createRouter({
       component: () => import('@/views/login/LoginPage.vue') //登录页
     },
     {
-      path: '/manager-layout',
+      path: '/manager',
       component: () => import('@/views/layout/ManagerLayout.vue'),
       redirect: 'manage/house',
       children: [
