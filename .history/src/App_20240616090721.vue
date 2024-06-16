@@ -5,10 +5,3 @@
 </template>
 
 <style scoped></style>
-<!-- "lint-staged": {
-       "*.{js,ts,vue}": [
-         "eslint --fix"
-       ]
-     } -->
-
-     

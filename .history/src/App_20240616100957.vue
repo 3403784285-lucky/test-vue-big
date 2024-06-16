@@ -11,4 +11,4 @@
        ]
      } -->
 
-     
+     <!-- "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore", -->
