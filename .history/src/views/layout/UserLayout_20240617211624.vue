@@ -18,14 +18,14 @@
               class="nav-link tab-test first"
               id="1"
               to="/user/preview"
-              :style="{ backgroundColor: bgColor==1 ? '#afb3af7a' : '#212529' }"
+              :style="{ backgroundColor: bgColorOne ? '#afb3af7a' : '#212529' }"
               ><span @click="clickRouter">我的订单</span></router-link
             >
             <router-link
               class="nav-link tab-test"
               id="2"
               to="/user/house"
-              :style="{ backgroundColor: bgColor==2 ? '#afb3af7a' : '#212529' }"
+              :style="{ backgroundColor: bgColorTwo ? '#afb3af7a' : '#212529' }"
             >
               <span @click="clickRouter">我的房源</span></router-link
             >
@@ -34,7 +34,7 @@
               class="nav-link tab-test"
               id="3"
               to="/user/info"
-              :style="{ backgroundColor: bgColor==3? '#afb3af7a' : '#212529' }"
+              :style="{ backgroundColor: bgColorThree? '#afb3af7a' : '#212529' }"
             >
               <span @click="clickRouter">我的房源</span></router-link
             >
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="col-md-10 content-frame">
-        <ul class="nav nav-tabs bg-light choose-nav-one" v-if="flagDisabled==1">
+        <ul class="nav nav-tabs bg-light choose-nav-one" v-if="!flagDisabled">
           <li class="nav-item">
             <div
               class="nav-link kid-list list-test1"
@@ -81,7 +81,7 @@
             </div>
           </li>
         </ul>
-        <ul class="nav nav-tabs bg-light choose-nav-two" v-if="flagDisabled==2">
+        <ul class="nav nav-tabs bg-light choose-nav-two" v-if="flagDisabled">
           <li class="nav-item">
             <div
               class="nav-link kid-list list-test"
@@ -118,13 +118,30 @@ const pushTable = () => {
 }
 const flagDisabled = ref(false)
 const timeStore = useTimeStore()
-const bgColor = ref(1)
-const clickRouter = (e) => {
+const bgColorOne = ref(1)
+const bgColorTwo = ref(0)
+const bgColorThree = ref(0)
+const clickRouter = () => {
+  flagDisabled.value=!flagDisabled.value
+  if(bgColorOne.value!=0){
+    bgColorOne.value=1
+  }else{
+    bgColorOne.value=0
+  }
+  if(bgColorTwo.value!=0){
+    bgColorOne.value=2
+  }else{
+    bgColorTwo.value=0
+  }
+  if(bgColorThree.value!=0){
+    bgColorThree.value=3
+  }else{
+    bgColorThree.value=0
+  }
   
-  bgColor.value=e.currentTarget.parentElement.id
-  flagDisabled.value=e.currentTarget.parentElement.id
-  console.log(bgColor.value)
-
+  
+  
+  
 }
 const changeTab = (tabName) => {
   $('.list-test').removeClass('active')

@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="col-md-10 content-frame">
-        <ul class="nav nav-tabs bg-light choose-nav-one" v-if="flagDisabled==1">
+        <ul class="nav nav-tabs bg-light choose-nav-one" v-if="!flagDisabled">
           <li class="nav-item">
             <div
               class="nav-link kid-list list-test1"
@@ -81,7 +81,7 @@
             </div>
           </li>
         </ul>
-        <ul class="nav nav-tabs bg-light choose-nav-two" v-if="flagDisabled==2">
+        <ul class="nav nav-tabs bg-light choose-nav-two" v-if="flagDisabled">
           <li class="nav-item">
             <div
               class="nav-link kid-list list-test"
@@ -120,9 +120,8 @@ const flagDisabled = ref(false)
 const timeStore = useTimeStore()
 const bgColor = ref(1)
 const clickRouter = (e) => {
-  
+  flagDisabled.value=!flagDisabled.value
   bgColor.value=e.currentTarget.parentElement.id
-  flagDisabled.value=e.currentTarget.parentElement.id
   console.log(bgColor.value)
 
 }
