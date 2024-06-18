@@ -9,36 +9,35 @@
             >穿花云烛展
           </div>
           <div
-            class="nav flex-column nav-pills me-3 list-user text-center"
-            id="v-pills-tab"
-            role="tablist"
-            aria-orientation="vertical"
+              class="nav flex-column nav-pills me-3 list-user text-center"
+              id="v-pills-tab"
+              role="tablist"
+              aria-orientation="vertical"
           >
             <router-link
-              class="nav-link tab-test first"
-              id="v-pills-home-tab"
-              to="/user/preview"
-              :style="{ backgroundColor: bgColor ? '#afb3af7a' : '#212529' }"
-              ><span @click="clickRouter">我的订单</span></router-link
+                class="nav-link tab-test first"
+                id="1"
+                to="/user/preview"
+                :style="{ backgroundColor: bgColor.value!=='1' ? '#afb3af7a' : '#212529' }"
+            ><span @click="clickRouter">我的订单</span></router-link
             >
             <router-link
-              class="nav-link tab-test"
-              id="v-pills-profile-tab"
-              to="/user/house"
-              :style="{ backgroundColor: !bgColor ? '#afb3af7a' : '#212529' }"
+                class="nav-link tab-test"
+                id="2"
+                to="/user/house"
+                :style="{ backgroundColor: !bgColor==2 ? '#afb3af7a' : '#212529' }"
             >
               <span @click="clickRouter">我的房源</span></router-link
             >
-            <a
-              class="nav-link tab-test"
-              id="v-pills-messages-tab"
-              data-bs-toggle="pill"
-              href="#v-pills-messages"
-              role="tab"
-              aria-controls="v-pills-messages"
-              aria-selected="false"
-              >我的资料</a
+            <router-link
+                class="nav-link tab-test"
+                id="3"
+                to="/user/info"
+                :style="{ backgroundColor: !bgColor==3 ? '#afb3af7a' : '#212529' }"
             >
+              <span @click="clickRouter">个人资料</span>
+            </router-link>
+
           </div>
         </div>
       </div>
@@ -46,36 +45,36 @@
         <ul class="nav nav-tabs bg-light choose-nav-one" v-if="!flagDisabled">
           <li class="nav-item">
             <div
-              class="nav-link kid-list list-test1"
-              :class="{ active: timeStore.activeTab == '待支付' }"
-              @click="changeTab('待支付')"
+                class="nav-link kid-list list-test1"
+                :class="{ active: timeStore.activeTab == '待支付' }"
+                @click="changeTab('待支付')"
             >
               待支付
             </div>
           </li>
           <li class="nav-item">
             <div
-              class="kid-list nav-link list-test1"
-              :class="{ active: timeStore.activeTab == '进行中' }"
-              @click="changeTab('进行中')"
+                class="kid-list nav-link list-test1"
+                :class="{ active: timeStore.activeTab == '进行中' }"
+                @click="changeTab('进行中')"
             >
               进行中
             </div>
           </li>
           <li class="nav-item">
             <div
-              class="kid-list nav-link list-test1"
-              :class="{ active: timeStore.activeTab == '已完成' }"
-              @click="changeTab('已完成')"
+                class="kid-list nav-link list-test1"
+                :class="{ active: timeStore.activeTab == '已完成' }"
+                @click="changeTab('已完成')"
             >
               已完成
             </div>
           </li>
           <li class="nav-item">
             <div
-              class="kid-list nav-link list-test1"
-              :class="{ active: timeStore.activeTab == '已取消' }"
-              @click="changeTab('已取消')"
+                class="kid-list nav-link list-test1"
+                :class="{ active: timeStore.activeTab == '已取消' }"
+                @click="changeTab('已取消')"
             >
               已取消
             </div>
@@ -84,18 +83,18 @@
         <ul class="nav nav-tabs bg-light choose-nav-two" v-if="flagDisabled">
           <li class="nav-item">
             <div
-              class="nav-link kid-list list-test"
-              :class="{ active: timeStore.activeTab == '我发布的房源' }"
-              @click="changeTab('我发布的房源')"
+                class="nav-link kid-list list-test"
+                :class="{ active: timeStore.activeTab == '我发布的房源' }"
+                @click="changeTab('我发布的房源')"
             >
               我发布的房源
             </div>
           </li>
           <li class="nav-item">
             <div
-              class="kid-list nav-link list-test"
-              :class="{ active: timeStore.activeTab == '我关注的房源' }"
-              @click="changeTab('我关注的房源')"
+                class="kid-list nav-link list-test"
+                :class="{ active: timeStore.activeTab == '我关注的房源' }"
+                @click="changeTab('我关注的房源')"
             >
               我关注的房源
             </div>
@@ -118,18 +117,17 @@ const pushTable = () => {
 }
 const flagDisabled = ref(false)
 const timeStore = useTimeStore()
-const bgColor = ref(true)
-const clickRouter = () => {
+const bgColor = ref(1)
+const clickRouter = (e) => {
+  console.log(bgColor.value)
   if (flagDisabled.value) {
     flagDisabled.value = false
   } else {
     flagDisabled.value = true
   }
-  if (bgColor.value) {
-    bgColor.value = false
-  } else {
-    bgColor.value = true
-  }
+  bgColor.value=e.target.id
+
+
 }
 const changeTab = (tabName) => {
   $('.list-test').removeClass('active')
@@ -156,9 +154,9 @@ const changeTab = (tabName) => {
 @font-face {
   font-family: '阿里妈妈方圆体 VF Regular';
   src:
-    url('//at.alicdn.com/wf/webfont/ZFKh9pHaLBHf/DuzVkKxfeI6V.woff2')
+      url('//at.alicdn.com/wf/webfont/ZFKh9pHaLBHf/DuzVkKxfeI6V.woff2')
       format('woff2'),
-    url('//at.alicdn.com/wf/webfont/ZFKh9pHaLBHf/YjzFddp87PA1.woff')
+      url('//at.alicdn.com/wf/webfont/ZFKh9pHaLBHf/YjzFddp87PA1.woff')
       format('woff');
   font-display: swap;
 }

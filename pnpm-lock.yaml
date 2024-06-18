@@ -17,6 +17,9 @@ importers:
       element-plus:
         specifier: ^2.4.2
         version: https://registry.npmmirror.com/element-plus/-/element-plus-2.4.2.tgz(vue@https://registry.npmmirror.com/vue/-/vue-3.3.8.tgz)
+      icons-vue:
+        specifier: link:@element-plus\icons-vue
+        version: link:@element-plus/icons-vue
       lodash:
         specifier: ^4.17.21
         version: https://registry.npmmirror.com/lodash/-/lodash-4.17.21.tgz
