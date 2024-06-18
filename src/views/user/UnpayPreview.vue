@@ -123,7 +123,6 @@
             {{ order.orderCountDown }}
           </div>
         </div>
-
         <!-- ... （省略其他部分的内容） -->
       </div>
     </div>
@@ -146,7 +145,6 @@ import $ from 'jquery'
 import { useRouter } from 'vue-router'
 //这里是数组
 const orders = ref({})
-
 const userStore = useUserStore()
 const router = useRouter()
 const unique = ref(null)
@@ -174,9 +172,7 @@ const getTime = () => {
 }
 const getRemainingTime = (endTime) => {
   // 将日期字符串转换为统一的格式（例如 ISO 格式）
-
   const formattedDate2 = endTime.replace(/-/g, '/')
-
   // 创建 Date 对象
   const date1 = new Date(getTime())
   const date2 = new Date(formattedDate2)

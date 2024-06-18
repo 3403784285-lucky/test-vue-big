@@ -14,6 +14,15 @@ export const userLoginService = ({ id, password }) => {
   return request.post('/user/login', { id, password })
 }
 
+/*export const updateProfile = (userId, profileData) => {
+  return request.put(`/upload/${userId}`, profileData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  });
+};*/
+
+
 //发送邮箱,获取验证码的接口
 export const userConfirmService = (email) => {
   return request.post('/user/getConfirm', { email })
@@ -162,4 +171,22 @@ export const userAskOrderService = (userId) => {
 
 export const userCancelService = (userId) => {
   return request.post('/user/cancel', { userId })
+}
+
+//修改用户信息
+export const updateUserInfo = ({
+  userId,
+  name,
+  email,
+  pic
+}) => {
+  return request.put('/user/update',{
+    userId,
+    name,
+    email,
+    pic
+  })
+}
+
+export class updateProfile {
 }
