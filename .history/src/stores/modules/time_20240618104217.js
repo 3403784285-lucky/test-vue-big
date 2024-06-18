@@ -10,7 +10,7 @@ export const useTimeStore = defineStore(
     const order = ref({})
     const finish = ref('')
     const cancel = ref('')
-    const loading= ref(false)
+    const  = ref(false)
 
 
     const activeTab = ref('待支付')
@@ -19,7 +19,7 @@ export const useTimeStore = defineStore(
       order,
       activeTab,
       finish,
-      loading,
+
       cancel
     }
   },

@@ -1,10 +1,11 @@
 <script setup>
-
+import { useTimeStore } from '@/stores/index'
+const timeStore = useTimeStore()
 
 </script>
 
 <template>
-  <router-view ></router-view>
+  <router-view v-loading.fullscreen.lock="fullscreenLoading"></router-view>
 </template>
 
 <style scoped></style>
