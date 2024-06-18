@@ -22,6 +22,7 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 app.mount('#app')
+
 import * as ELIcons from '@element-plus/icons-vue'
 // 全局导入element plus图标
 for (let iconName in ELIcons) {

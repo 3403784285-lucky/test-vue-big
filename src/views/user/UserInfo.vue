@@ -1,65 +1,61 @@
 <template>
-  <div class="user-profile-container">
-    <div class="user-profile">
-      <el-form :model="userProfile" label-width="80px">
-        <el-form-item label="ID">
-          <el-input v-model="userProfile.id" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="昵称">
-          <el-input v-model="userProfile.nickname"></el-input>
-        </el-form-item>
-        <el-form-item label="Email">
-          <el-input v-model="userProfile.email"></el-input>
-        </el-form-item>
-        <el-form-item label="头像">
-          <el-avatar :src="userProfile.avatar" class="user-avatar"></el-avatar>
-          <el-upload
-              class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
-              :show-file-list="false"
-              :on-success="handleAvatarSuccess"
-              :before-upload="beforeAvatarUpload"
-          >
-            <el-button type="primary">上传新头像</el-button>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="房产">
-          <el-input v-model="userProfile.possession" prefix-icon="el-icon-money"></el-input>
-        </el-form-item>
-        <el-form-item label="余额">
-          <el-input v-model="userProfile.balance" prefix-icon="el-icon-money"></el-input>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-select v-model="userProfile.status" placeholder="请选择状态">
-            <el-option label="Active" value="active"></el-option>
-            <el-option label="Inactive" value="inactive"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="saveProfile">保存编辑</el-button>
-        </el-form-item>
-      </el-form>
+  <div class="container">
+    <div class="user-profile-container">
+      <div class="user-profile">
+        <el-form :model="editProfileForm" label-width="100px">
+          <el-form-item label="头像" class="large-form-item">
+            <el-upload
+                class="avatar-uploader"
+                action=""
+                :show-file-list="false"
+                :before-upload="beforeAvatarUpload"
+                :auto-upload="false"
+                :on-change="handleAvatarChange">
+              <el-avatar :src="editProfileForm.pic" class="user-avatar"></el-avatar>
+            </el-upload>
+          </el-form-item>
+          <el-form-item label="ID" class="large-form-item">
+            <el-input v-model="editProfileForm.userId" disabled></el-input>
+          </el-form-item>
+          <el-form-item label="昵称" class="large-form-item">
+            <el-input v-model="editProfileForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="Email" class="large-form-item">
+            <el-input v-model="editProfileForm.email"></el-input>
+          </el-form-item>
+          <el-form-item class="large-form-item">
+            <el-button type="primary" @click="saveProfile">保存编辑</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import {ref} from "vue";
 import { ElMessage } from 'element-plus';
+import { useUserStore } from '@/stores/index';
+import axios from "axios";
 
-const userProfile = reactive({
-  id: '12345',
-  nickname: 'John Doe',
-  email: 'john.doe@example.com',
-  avatar: 'https://via.placeholder.com/150',
-  possession: 'a',
-  balance: 100,
-  status: 'active'
+
+const selectedFile = ref(null);
+const userStore = useUserStore();
+const editProfileForm = ref({
+  userId: userStore.userId,
+  name: userStore.name,
+  pic: userStore.pic,
+  email: userStore.email
 });
 
-const handleAvatarSuccess = (response, file) => {
-  userProfile.avatar = URL.createObjectURL(file.raw);
-  ElMessage.success('头像上传成功');
+const handleAvatarChange = (file) => {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    editProfileForm.value.pic = e.target.result;
+  };
+  reader.readAsDataURL(file.raw);
+  selectedFile.value = file.raw;
+  console.log(userStore.id)
 };
 
 const beforeAvatarUpload = (file) => {
@@ -75,23 +71,77 @@ const beforeAvatarUpload = (file) => {
   return isJPG && isLt2M;
 };
 
-const saveProfile = () => {
-  // 模拟保存用户信息
-  ElMessage.success('用户信息保存成功');
+async function saveProfile() {
+  console.log('提交个人信息:', editProfileForm.value);
+  try {
+    const userId = userStore.userId;
+    const formData = new FormData();
+
+    if (selectedFile.value) {
+      formData.append('file', selectedFile.value);
+    }
+    formData.append('nickname', editProfileForm.value.name);
+    formData.append('email', editProfileForm.value.email);
+
+    const response = await updateProfile(userId, formData);
+
+    console.log(response);
+    userStore.name = editProfileForm.value.name;
+    userStore.email = editProfileForm.value.email;
+    if (response.data.pic) {
+      userStore.pic = response.data.pic;
+    }
+    userStore.updateUserInfo({
+      userId: userId,
+      name: editProfileForm.value.name,
+      email: editProfileForm.value.email,
+      pic: response.data.pic || editProfileForm.value.pic
+    });
+    ElMessage.success('信息更新成功');
+  } catch (error) {
+    console.error('更新失败:', error);
+    ElMessage.error('信息更新失败');
+  }
+}
+
+const updateProfile = (userId, profileData) => {
+  return axios.put(`http://localhost:8080/user/upload/${userId}`, profileData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  });
 };
+
+
 </script>
 
 <style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  font-family: 'YouYuan';
+}
+
+
+.el-menu-demo {
+  background-color: transparent;
+  border-bottom: none;
+}
+
 .user-profile-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  background-color: #f0f2f5;
-  padding: 20px;
+  flex: 1;
+  padding-top: 70px; /* 确保内容不被导航栏遮挡 */
+  width: 100%;
 }
 
-.user-profile {
+.user-profile, .account-settings {
   background: #fff;
   padding: 30px;
   border-radius: 12px;
@@ -101,7 +151,7 @@ const saveProfile = () => {
   transition: all 0.3s;
 }
 
-.user-profile:hover {
+.user-profile:hover, .account-settings:hover {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
@@ -112,12 +162,12 @@ const saveProfile = () => {
 .avatar-uploader {
   display: flex;
   align-items: center;
-  gap: 10px;
+  padding-left: 20px;
 }
 
 .user-avatar {
-  width: 80px;
-  height: 80px;
+  width: 120px;  /* 增大头像的宽度 */
+  height: 120px; /* 增大头像的高度 */
   border-radius: 50%;
   border: 2px solid #eaeaea;
 }
@@ -134,5 +184,17 @@ const saveProfile = () => {
 
 .el-input, .el-select {
   width: 100%;
+}
+
+.large-form-item .el-form-item__content {
+  height: 50px;  /* 增大每个表单项的高度 */
+}
+
+.large-form-item .el-input {
+  height: 100%;  /* 确保输入框填充整个高度 */
+}
+
+.large-form-item .el-input__inner {
+  height: 100%;  /* 确保输入框内部填充整个高度 */
 }
 </style>
