@@ -123,8 +123,7 @@ const clickRouter = (e) => {
   
   bgColor.value=e.currentTarget.parentElement.id
   flagDisabled.value=e.currentTarget.parentElement.id
-  console.log(flagDisabled.value)
-
+  console.log(bgColor.value)
 
 }
 const changeTab = (tabName) => {
