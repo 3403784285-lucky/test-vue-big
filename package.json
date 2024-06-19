@@ -16,6 +16,7 @@
     "element-plus": "^2.4.2",
     "less": "^4.2.0",
     "less-loader": "^12.2.0",
+    "icons-vue": "link:@element-plus\\icons-vue",
     "lodash": "^4.17.21",
     "nodemailer": "^6.9.7",
     "nodemailer-smtp-transport": "^2.7.4",

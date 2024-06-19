@@ -1,20 +1,10 @@
-<script setup>
-
-
-</script>
+<script setup></script>
 
 <template>
-  <router-view ></router-view>
+  <router-view v-loading.fullscreen.lock="fullscreenLoading"></router-view>
 </template>
 
-<style scoped>
-
-*{
-  padding: 0;
-  margin: 0;
-}
-
-</style>
+<style scoped></style>
 <!-- "lint-staged": {
        "*.{js,ts,vue}": [
          "eslint --fix"

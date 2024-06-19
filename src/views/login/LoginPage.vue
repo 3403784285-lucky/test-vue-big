@@ -264,7 +264,7 @@ const simpleSchemaLogin = yup.object().shape({
           name="id"
           placeholder="请输入你的账号"
         />
-        <br />
+        <br/>
         <ErrorMessage name="id" />
       </div>
 

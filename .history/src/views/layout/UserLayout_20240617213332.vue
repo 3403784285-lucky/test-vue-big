@@ -36,7 +36,7 @@
               to="/user/info"
               :style="{ backgroundColor: bgColor==3? '#afb3af7a' : '#212529' }"
             >
-              <span @click="clickRouter">个人资料</span></router-link
+              <span @click="clickRouter">我的房源</span></router-link
             >
            
           </div>

@@ -36,14 +36,14 @@
               to="/user/info"
               :style="{ backgroundColor: bgColor==3? '#afb3af7a' : '#212529' }"
             >
-              <span @click="clickRouter">个人资料</span></router-link
+              <span @click="clickRouter">我的房源</span></router-link
             >
            
           </div>
         </div>
       </div>
       <div class="col-md-10 content-frame">
-        <ul class="nav nav-tabs bg-light choose-nav-one" v-if="flagDisabled==1">
+        <ul class="nav nav-tabs bg-light choose-nav-one" v-if="!flagDisabled">
           <li class="nav-item">
             <div
               class="nav-link kid-list list-test1"
@@ -81,7 +81,7 @@
             </div>
           </li>
         </ul>
-        <ul class="nav nav-tabs bg-light choose-nav-two" v-if="flagDisabled==2">
+        <ul class="nav nav-tabs bg-light choose-nav-two" v-if="flagDisabled">
           <li class="nav-item">
             <div
               class="nav-link kid-list list-test"
@@ -122,7 +122,6 @@ const bgColor = ref(1)
 const clickRouter = (e) => {
   
   bgColor.value=e.currentTarget.parentElement.id
-  flagDisabled.value=e.currentTarget.parentElement.id
   console.log(bgColor.value)
 
 }

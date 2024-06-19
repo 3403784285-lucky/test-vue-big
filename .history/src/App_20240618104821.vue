@@ -1,0 +1,18 @@
+<script setup>
+import { useTimeStore } from '@/stores/index'
+const timeStore = useTimeStore()
+
+</script>
+
+<template>
+  <router-view v-loading.fullscreen.lock="timeStore.loading"></router-view>
+</template>
+
+<style scoped></style>
+<!-- "lint-staged": {
+       "*.{js,ts,vue}": [
+         "eslint --fix"
+       ]
+     } -->
+
+     
