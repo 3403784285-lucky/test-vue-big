@@ -25,7 +25,7 @@ const router = createRouter({
     {
       path: '/manager-layout',
       component: () => import('@/views/layout/ManagerLayout.vue'),
-      redirect: 'manage/house',
+      redirect: '/manage/house',
       children: [
         {
           path: '/manage/house',
