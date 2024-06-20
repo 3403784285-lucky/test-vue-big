@@ -9,6 +9,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/index'
 import {useButtonStore} from "../stores";
+import {ElMessageBox} from "element-plus";
 
 
 
@@ -94,7 +95,7 @@ const router = createRouter({
         },
         {
           path: '/house/second',
-          meta: { uniqueId: 'homeSecond' }, // 添加一个唯一标识符
+          meta: { uniqueId: 'homeSecond',requiresAuth: true }, // 添加一个唯一标识符
 
           // 详细描述
           component: () => import('@/views/house/HouseSecond.vue')
@@ -142,6 +143,7 @@ router.beforeEach((to,from,next) => {
   const uerStore = useUserStore();
   const buttonStore = useButtonStore()
   const loggedIn = uerStore.token;
+  console.log(loggedIn);
   if ((to.matched.some(record => record.meta.requiresAuth) && !loggedIn) ||( !loggedIn && buttonStore.fromButton)) {
     ElMessageBox.confirm('请先登录再进行操作！', '提示', {
       confirmButtonText: '去登录',
@@ -149,6 +151,8 @@ router.beforeEach((to,from,next) => {
       type: 'warning',
     }).then(() => {
       router.push('/user/login');
+      buttonStore.setFromButton(false);
+      // next('/user/login');
     }).catch(() => {
       console.log('用户取消操作');
     });

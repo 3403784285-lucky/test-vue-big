@@ -210,11 +210,9 @@ onBeforeMount(async () => {
   const res = await houseDetailService()
   houses.value = res.data.data
   
-  
   console.log(houses.value)
 })
 const clickSelected = () => {
-  buttonStore.setFromButton(true)
     inputSearchWatch();
 }
 const h = ref(8)
@@ -239,6 +237,7 @@ onUnmounted(() => {
   inputSearchWatch.cancel()
 })
 const clickHouse = (value) => {
+  buttonStore.setFromButton(true)
   router.push('/house/channel')
   // console.log(value)
   timeStore.house = value
