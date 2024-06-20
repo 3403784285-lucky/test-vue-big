@@ -11,6 +11,7 @@ import {
   userConfirmService
 } from '@/api/user'
 import $ from 'jquery'
+import { log } from 'echarts/types/src/util/log.js'
 
 const isRegister = ref(true)
 

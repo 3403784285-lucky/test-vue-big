@@ -129,6 +129,7 @@ const router = createRouter({
 //   }
 //   next()
 // })
+
 router.afterEach((to, from) => {
   if ((to.path == '/pay' && from.path != '/')||(to.path == '/login' && from.path != '/')) {
     location.reload()

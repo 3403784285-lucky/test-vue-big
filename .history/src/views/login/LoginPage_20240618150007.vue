@@ -66,7 +66,6 @@ const register = async () => {
       const res = await userRegisterService(formModel.value)
       if (res.data.code == 506) ElMessage.error('验证码错误')
       else if (res.data.code == 200) {
-        console.log(res.data.data.id)
         ElMessage.success('注册成功')
         isRegister.value = false
       }
