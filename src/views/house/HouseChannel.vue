@@ -700,6 +700,7 @@ import { useRouter } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
 import $ from 'jquery'
 import cloneDeep from 'lodash/cloneDeep'
+import {ElMessage} from "element-plus";
 const timeStore = useTimeStore()
 const userStore = useUserStore()
 const router = useRouter()
@@ -780,16 +781,23 @@ const declareComment = async () => {
   temp.value.receiverId = 0
 
   console.log(
-    '这是================================' + JSON.stringify(temp.value)
+      '这是================================' + JSON.stringify(temp.value)
   )
   const res = await houseDeclareCommentService(temp.value)
 
-  temp.value = res.data.data
-  temp.value.nickname = userStore.name
-  nestedArray.value.push([temp.value])
-  inputComment.value.value = ''
-  ElMessage.success('评论发布成功')
+  if (res.data.code === 200 && res.data.message === 'OK') {
+    temp.value = res.data.data
+    temp.value.nickname = userStore.name
+    nestedArray.value.push([temp.value])
+    inputComment.value.value = ''
+    ElMessage.success('评论发布成功')
+  } else {
+    ElMessage.error('评论发布失败,请先购买哦亲')
+  }
 }
+
+
+
 const replyComment = async (comment) => {
   temp.value.userId = userStore.userId
   if (comment.parentId == '') {
