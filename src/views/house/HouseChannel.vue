@@ -182,6 +182,7 @@
                             </div>
                             <div class="modal-body">
                               <div class="container">
+                                <p>{{message.value}}</p>
                                 <div class="row preview-frame" v-if="flagJudge">
                                   <input
                                     type="radio"
@@ -992,11 +993,13 @@ const order = reactive({
 })
 const timeLength = ref(0)
 let orderJudge
+
 const clickPreview = async (skuId) => {
   const res = await judgeOrderService(skuId)
-  orderJudge = res.data.data
+  orderJudge.value = res.data.data
   console.log(res.data)
 }
+
 const getTimeFromRange = (timeRange) => {
   const [startStr, endStr] = timeRange.split('~')
   startTime = startStr
@@ -1008,6 +1011,9 @@ let disabledOptions1Copy
 let disabledOptions2Copy
 
 const variable = ref(1)
+let message = reactive({
+  value:''
+})
 const init = async () => {
   console.log(house.value.skuId)
   const bes = await houseManageTimeService(house.value.skuId)
@@ -1017,7 +1023,12 @@ const init = async () => {
   console.log(
     JSON.stringify(bes.data.data) + '--->' + JSON.stringify(ses.data.data)
   )
-  console.log(time.value[0].id)
+  // 检查 time.value[0].id 是否存在
+  if (time.value[0] && time.value[0].id) {
+    console.log(time.value[0].id)
+  } else {
+    message.value = '该房源目前不支持预约哦！'
+  }
   disabledOptions1 = reactive({
     [String(time.value[0].id)]: false,
     [String(time.value[1].id)]: false,
