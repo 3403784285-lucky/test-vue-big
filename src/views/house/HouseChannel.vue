@@ -182,6 +182,7 @@
                             </div>
                             <div class="modal-body">
                               <div class="container">
+                                <p>{{message.value}}</p>
                                 <div class="row preview-frame" v-if="flagJudge">
                                   <input
                                     type="radio"
@@ -514,6 +515,7 @@
     <div class="comment-title">评论</div>
     <div class="input-group mb-3">
       <input
+          v-model="commentContent"
         type="text"
         class="form-control inputCo"
         placeholder="请发布有爱评论哦"
@@ -700,7 +702,6 @@ import { useRouter } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
 import $ from 'jquery'
 import cloneDeep from 'lodash/cloneDeep'
-import {ElMessage} from "element-plus";
 const timeStore = useTimeStore()
 const userStore = useUserStore()
 const router = useRouter()
@@ -772,32 +773,31 @@ const copy = ref({
   receiverId: null
 })
 
+const commentContent = ref('');
 const declareComment = async () => {
-  temp.value.userId = userStore.userId
-  temp.value.parentId = ''
-  temp.value.createTime = getTime()
-  temp.value.houseId = house.value.skuId
-  temp.value.content = inputComment.value.value
-  temp.value.receiverId = 0
+  if (!commentContent.value) {
+    ElMessage.warning('评论不能为空');
+  } else {
+    temp.value.userId = userStore.userId
+    temp.value.parentId = ''
+    temp.value.createTime = getTime()
+    temp.value.houseId = house.value.skuId
+    temp.value.content = inputComment.value.value
+    temp.value.receiverId = 0
 
-  console.log(
-      '这是================================' + JSON.stringify(temp.value)
-  )
-  const res = await houseDeclareCommentService(temp.value)
+    console.log(
+        '这是================================' + JSON.stringify(temp.value)
+    )
+    const res = await houseDeclareCommentService(temp.value)
 
-  if (res.data.code === 200 && res.data.message === 'OK') {
     temp.value = res.data.data
     temp.value.nickname = userStore.name
     nestedArray.value.push([temp.value])
     inputComment.value.value = ''
     ElMessage.success('评论发布成功')
-  } else {
-    ElMessage.error('评论发布失败,请先购买哦亲')
   }
+
 }
-
-
-
 const replyComment = async (comment) => {
   temp.value.userId = userStore.userId
   if (comment.parentId == '') {
@@ -992,11 +992,13 @@ const order = reactive({
 })
 const timeLength = ref(0)
 let orderJudge
+
 const clickPreview = async (skuId) => {
   const res = await judgeOrderService(skuId)
-  orderJudge = res.data.data
+  orderJudge.value = res.data.data
   console.log(res.data)
 }
+
 const getTimeFromRange = (timeRange) => {
   const [startStr, endStr] = timeRange.split('~')
   startTime = startStr
@@ -1008,6 +1010,9 @@ let disabledOptions1Copy
 let disabledOptions2Copy
 
 const variable = ref(1)
+let message = reactive({
+  value:''
+})
 const init = async () => {
   console.log(house.value.skuId)
   const bes = await houseManageTimeService(house.value.skuId)
@@ -1017,7 +1022,12 @@ const init = async () => {
   console.log(
     JSON.stringify(bes.data.data) + '--->' + JSON.stringify(ses.data.data)
   )
-  console.log(time.value[0].id)
+  // 检查 time.value[0].id 是否存在
+  if (time.value[0] && time.value[0].id) {
+    console.log(time.value[0].id)
+  } else {
+    message.value = '该房源目前不支持预约哦！'
+  }
   disabledOptions1 = reactive({
     [String(time.value[0].id)]: false,
     [String(time.value[1].id)]: false,
@@ -1189,6 +1199,7 @@ const clickTwo = (e) => {
 onMounted(() => {
   initFocus()
 })
+
 const focus = (e) => {
   e = e || window.e
   if (e.currentTarget.getAttribute('class').includes('focused')) {

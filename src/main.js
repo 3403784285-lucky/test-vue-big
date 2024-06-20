@@ -16,6 +16,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/js/bootstrap.bundle.min' // 注意这里使用了 bundle 版本，它包含了 Popper.js
 import '@/assets/font/iconfont.css'
+
 import ElementPlus from 'element-plus'//引入Element Plus库，用于创建UI界面
 import 'element-plus/dist/index.css'//引入Element Plus库的CSS样式表
 const app = createApp(App)
@@ -23,7 +24,7 @@ const app = createApp(App)
 // axios.defaults.withCredentials = true
 app.use(router)
 app.use(pinia)
-app.use(ElementPlus)// 在Vue实例中使用Element Plus库
+app.use(ElementPlus);
 app.mount('#app')
 
 import * as ELIcons from '@element-plus/icons-vue'
@@ -31,3 +32,5 @@ import * as ELIcons from '@element-plus/icons-vue'
 for (let iconName in ELIcons) {
     app.component(iconName, ELIcons[iconName])
 }
+
+
