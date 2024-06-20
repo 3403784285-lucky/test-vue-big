@@ -514,6 +514,7 @@
     <div class="comment-title">评论</div>
     <div class="input-group mb-3">
       <input
+          v-model="commentContent"
         type="text"
         class="form-control inputCo"
         placeholder="请发布有爱评论哦"
@@ -699,7 +700,8 @@ import {
 import { useRouter } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
 import $ from 'jquery'
-import cloneDeep from 'lodash/cloneDeep'
+import cloneDeep from 'lodash/cloneDeep';
+import { useButtonStore } from '@/stores/index';
 const timeStore = useTimeStore()
 const userStore = useUserStore()
 const router = useRouter()
@@ -707,6 +709,8 @@ const selectedOption1 = ref(null)
 const desc1 = ref('')
 const comments = ref()
 const areaReply = ref()
+
+const buttonStore = useButtonStore();
 const transferValue = (comment) => {
   const clonedObject = cloneDeep(comment)
   temp.value = clonedObject
@@ -771,24 +775,30 @@ const copy = ref({
   receiverId: null
 })
 
+const commentContent = ref('');
 const declareComment = async () => {
-  temp.value.userId = userStore.userId
-  temp.value.parentId = ''
-  temp.value.createTime = getTime()
-  temp.value.houseId = house.value.skuId
-  temp.value.content = inputComment.value.value
-  temp.value.receiverId = 0
+  if (!commentContent.value) {
+    ElMessage.warning('评论不能为空');
+  } else {
+    temp.value.userId = userStore.userId
+    temp.value.parentId = ''
+    temp.value.createTime = getTime()
+    temp.value.houseId = house.value.skuId
+    temp.value.content = inputComment.value.value
+    temp.value.receiverId = 0
 
-  console.log(
-    '这是================================' + JSON.stringify(temp.value)
-  )
-  const res = await houseDeclareCommentService(temp.value)
+    console.log(
+        '这是================================' + JSON.stringify(temp.value)
+    )
+    const res = await houseDeclareCommentService(temp.value)
 
-  temp.value = res.data.data
-  temp.value.nickname = userStore.name
-  nestedArray.value.push([temp.value])
-  inputComment.value.value = ''
-  ElMessage.success('评论发布成功')
+    temp.value = res.data.data
+    temp.value.nickname = userStore.name
+    nestedArray.value.push([temp.value])
+    inputComment.value.value = ''
+    ElMessage.success('评论发布成功')
+  }
+
 }
 const replyComment = async (comment) => {
   temp.value.userId = userStore.userId
@@ -984,11 +994,13 @@ const order = reactive({
 })
 const timeLength = ref(0)
 let orderJudge
+
 const clickPreview = async (skuId) => {
-  const res = await judgeOrderService(skuId)
-  orderJudge = res.data.data
-  console.log(res.data)
+    const res = await judgeOrderService(skuId)
+    orderJudge = res.data.data
+    console.log(res.data)
 }
+
 const getTimeFromRange = (timeRange) => {
   const [startStr, endStr] = timeRange.split('~')
   startTime = startStr
@@ -1181,19 +1193,23 @@ const clickTwo = (e) => {
 onMounted(() => {
   initFocus()
 })
+
 const focus = (e) => {
-  e = e || window.e
-  if (e.currentTarget.getAttribute('class').includes('focused')) {
-    e.currentTarget.classList.remove('focused')
-    userFocusedService(userStore.userId, house.value.skuId)
-    ElMessage.success('已取消关注')
-    e.currentTarget.innerText = '关注房源'
-  } else {
-    userFocusService(userStore.userId, house.value.skuId)
-    e.currentTarget.classList.add('focused')
-    ElMessage.success('关注成功')
-    e.currentTarget.innerText = '已关注房源'
-  }
+  // 设置 shouldRetry 标志为 true
+  buttonStore.setFromButton(true);
+    e = e || window.e
+    if (e.currentTarget.getAttribute('class').includes('focused')) {
+      e.currentTarget.classList.remove('focused')
+      userFocusedService(userStore.userId, house.value.skuId)
+      ElMessage.success('已取消关注')
+      e.currentTarget.innerText = '关注房源'
+    } else {
+      userFocusService(userStore.userId, house.value.skuId)
+      e.currentTarget.classList.add('focused')
+      ElMessage.success('关注成功')
+      e.currentTarget.innerText = '已关注房源'
+    }
+
 }
 const initFocus = async () => {
   //查询对应的用户和房源的关系

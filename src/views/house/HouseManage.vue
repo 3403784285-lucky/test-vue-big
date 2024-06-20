@@ -93,6 +93,7 @@
       <div class="col-md-7 search-part">
         <div class="input-group mb-3">
           <input
+              v-model="searchContent"
             type="text"
             class="form-control searchInput"
             placeholder="输入你要搜索的房屋名称"
@@ -194,12 +195,15 @@ import { useRouter } from 'vue-router'
 import { useTimeStore } from '@/stores/index'
 import { debounce } from 'lodash'
 import $ from 'jquery'
+import { useButtonStore } from '@/stores/index';
+const buttonStore = useButtonStore();
 // 在setup外部声明
 //let houses
 const houses = ref([])
 const router = useRouter()
 const timeStore = useTimeStore()
 const selectOption = ref()
+
 // setup函数
 onBeforeMount(async () => {
   const res = await houseDetailService()
@@ -207,21 +211,24 @@ onBeforeMount(async () => {
   console.log(houses.value)
 })
 const clickSelected = () => {
-  inputSearchWatch()
+  buttonStore.setFromButton(true)
+    inputSearchWatch();
 }
 const h = ref(8)
 const clickMore = () => {
   h.value += 8
 }
+
+let searchContent = ref('')
 const inputSearchWatchCopy = async () => {
   console.log('触动了')
-  let keySmall = selectOption.value
+    let keySmall = selectOption.value
 
-  const res = await searchContentByKeyService(
-    $('.searchInput')[0].value,
-    keySmall
-  )
-  houses.value = res.data.data
+    const res = await searchContentByKeyService(
+        $('.searchInput')[0].value,
+        keySmall
+    )
+    houses.value = res.data.data
 }
 const inputSearchWatch = debounce(inputSearchWatchCopy, 500)
 onUnmounted(() => {

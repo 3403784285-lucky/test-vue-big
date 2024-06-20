@@ -16,11 +16,13 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/js/bootstrap.bundle.min' // 注意这里使用了 bundle 版本，它包含了 Popper.js
 import '@/assets/font/iconfont.css'
+import ElementPlus from 'element-plus';
 const app = createApp(App)
 //带有凭证，跨域操作
 // axios.defaults.withCredentials = true
 app.use(router)
 app.use(pinia)
+app.use(ElementPlus);
 app.mount('#app')
 
 import * as ELIcons from '@element-plus/icons-vue'

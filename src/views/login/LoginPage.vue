@@ -11,9 +11,9 @@ import {
   userConfirmService
 } from '@/api/user'
 import $ from 'jquery'
+import {ElMessage} from "element-plus";
 
 const isRegister = ref(true)
-
 const countRemailTime = new useCountStore()
 const confirmText = ref('验证码')
 const router = useRouter()
@@ -291,7 +291,6 @@ const simpleSchemaLogin = yup.object().shape({
 <style scoped>
 * {
   outline: none;
-  padding: none;
   margin: 0;
 }
 .formLogin,

@@ -116,7 +116,7 @@ const router = useRouter()
 const pushTable = () => {
   router.push('/')
 }
-const flagDisabled = ref(false)
+const flagDisabled = ref(1)
 const timeStore = useTimeStore()
 const bgColor = ref(1)
 const clickRouter = (e) => {

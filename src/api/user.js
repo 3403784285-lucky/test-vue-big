@@ -188,5 +188,4 @@ export const updateUserInfo = ({
   })
 }
 
-export class updateProfile {
-}
+
