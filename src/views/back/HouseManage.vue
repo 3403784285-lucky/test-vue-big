@@ -634,8 +634,7 @@ const openFileInput = () => {
 const selectedImage = ref()
 const handleFileChange = (event) => {
   // 处理文件选择变化
-  const file = event.target.files[0]
-
+  const file = event.target.files[0];
   if (file) {
     // 将选择的文件显示在 <img> 元素中
     const reader = new FileReader()

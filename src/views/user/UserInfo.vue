@@ -79,15 +79,18 @@ async function saveProfile() {
 
     if (selectedFile.value) {
       formData.append('file', selectedFile.value);
+    } else {
+      formData.append('fileUrl', editProfileForm.value.pic);
     }
     formData.append('nickname', editProfileForm.value.name);
     formData.append('email', editProfileForm.value.email);
 
+
     const response = await updateProfile(userId, formData);
 
-    console.log(response);
     userStore.name = editProfileForm.value.name;
     userStore.email = editProfileForm.value.email;
+
     if (response.data.pic) {
       userStore.pic = response.data.pic;
     }
@@ -95,7 +98,7 @@ async function saveProfile() {
       userId: userId,
       name: editProfileForm.value.name,
       email: editProfileForm.value.email,
-      pic: response.data.pic || editProfileForm.value.pic
+      pic: response.data.data
     });
     ElMessage.success('信息更新成功');
   } catch (error) {
@@ -103,6 +106,7 @@ async function saveProfile() {
     ElMessage.error('信息更新失败');
   }
 }
+
 
 const updateProfile = (userId, profileData) => {
   return axios.put(`http://localhost:8080/user/upload/${userId}`, profileData, {

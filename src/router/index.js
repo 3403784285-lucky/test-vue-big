@@ -7,7 +7,11 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { createRouter, createWebHistory } from 'vue-router'
-// import { useUserStore } from '@/stores/index'
+import { useUserStore } from '@/stores/index'
+import {useButtonStore} from "../stores";
+import {ElMessageBox} from "element-plus";
+
+
 
 //创建router实例
 // 配置路由模式：
@@ -33,7 +37,7 @@ const router = createRouter({
         {
           path: '/manage/user',
           // 详细描述
-          component: () => import('@/views/back/UserManage.vue')
+          component: () => import('@/views/back/IndexLay.vue')
         },
         {
           path: '/manage/preview',
@@ -44,6 +48,7 @@ const router = createRouter({
     },
     {
       path: '/pay',
+      meta: { requiresAuth:true },
       component: () => import('@/views/pay/IdentifyPay.vue')
     },
     {
@@ -90,14 +95,16 @@ const router = createRouter({
         },
         {
           path: '/house/second',
-          meta: { uniqueId: 'homeSecond' }, // 添加一个唯一标识符
+          meta: { uniqueId: 'homeSecond',requiresAuth: true }, // 添加一个唯一标识符
 
           // 详细描述
           component: () => import('@/views/house/HouseSecond.vue')
         },
         {
           path: '/house/declare',
-          meta: { uniqueId: 'homeDeclare' }, // 添加一个唯一标识符
+          meta: { uniqueId: 'homeDeclare',
+            requiresAuth:true
+          }, // 添加一个唯一标识符
 
           // 详细描述
           component: () => import('@/views/house/HouseDeclare.vue')
@@ -130,10 +137,35 @@ const router = createRouter({
 //   next()
 // })
 
+
+//全局前置守卫，在每次导航之前，检查是否需要认证以及用户是否已经登录
+router.beforeEach((to,from,next) => {
+  const uerStore = useUserStore();
+  const buttonStore = useButtonStore()
+  const loggedIn = uerStore.token;
+  console.log(loggedIn);
+  if ((to.matched.some(record => record.meta.requiresAuth) && !loggedIn) ||( !loggedIn && buttonStore.fromButton)) {
+    ElMessageBox.confirm('请先登录再进行操作！', '提示', {
+      confirmButtonText: '去登录',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }).then(() => {
+      router.push('/user/login');
+      buttonStore.setFromButton(false);
+      // next('/user/login');
+    }).catch(() => {
+      console.log('用户取消操作');
+    });
+  }
+  else {
+    next();
+  }
+});
+
 router.afterEach((to, from) => {
   if (to.path == '/pay' && from.path != '/') {
     location.reload()
     console.log(to.path + '------' + from.path)
   }
 })
-export default router
+export default router;
