@@ -206,8 +206,11 @@ const selectOption = ref()
 
 // setup函数
 onBeforeMount(async () => {
+
   const res = await houseDetailService()
   houses.value = res.data.data
+  
+  
   console.log(houses.value)
 })
 const clickSelected = () => {

@@ -27,7 +27,7 @@ const router = createRouter({
     {
       path: '/manager-layout',
       component: () => import('@/views/layout/ManagerLayout.vue'),
-      redirect: 'manage/house',
+      redirect: '/manage/house',
       children: [
         {
           path: '/manage/house',
@@ -36,7 +36,7 @@ const router = createRouter({
         {
           path: '/manage/user',
           // 详细描述
-          component: () => import('@/views/back/UserManage.vue')
+          component: () => import('@/views/back/IndexLay.vue')
         },
         {
           path: '/manage/preview',

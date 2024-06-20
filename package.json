@@ -12,7 +12,10 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.6.2",
+    "echarts": "^5.5.0",
     "element-plus": "^2.4.2",
+    "less": "^4.2.0",
+    "less-loader": "^12.2.0",
     "icons-vue": "link:@element-plus\\icons-vue",
     "lodash": "^4.17.21",
     "nodemailer": "^6.9.7",

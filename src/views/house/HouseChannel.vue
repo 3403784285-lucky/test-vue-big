@@ -700,8 +700,7 @@ import {
 import { useRouter } from 'vue-router'
 import { reactive, ref, onMounted } from 'vue'
 import $ from 'jquery'
-import cloneDeep from 'lodash/cloneDeep';
-import { useButtonStore } from '@/stores/index';
+import cloneDeep from 'lodash/cloneDeep'
 const timeStore = useTimeStore()
 const userStore = useUserStore()
 const router = useRouter()
@@ -709,8 +708,6 @@ const selectedOption1 = ref(null)
 const desc1 = ref('')
 const comments = ref()
 const areaReply = ref()
-
-const buttonStore = useButtonStore();
 const transferValue = (comment) => {
   const clonedObject = cloneDeep(comment)
   temp.value = clonedObject
@@ -994,13 +991,11 @@ const order = reactive({
 })
 const timeLength = ref(0)
 let orderJudge
-
 const clickPreview = async (skuId) => {
-    const res = await judgeOrderService(skuId)
-    orderJudge = res.data.data
-    console.log(res.data)
+  const res = await judgeOrderService(skuId)
+  orderJudge = res.data.data
+  console.log(res.data)
 }
-
 const getTimeFromRange = (timeRange) => {
   const [startStr, endStr] = timeRange.split('~')
   startTime = startStr
@@ -1195,21 +1190,18 @@ onMounted(() => {
 })
 
 const focus = (e) => {
-  // 设置 shouldRetry 标志为 true
-  buttonStore.setFromButton(true);
-    e = e || window.e
-    if (e.currentTarget.getAttribute('class').includes('focused')) {
-      e.currentTarget.classList.remove('focused')
-      userFocusedService(userStore.userId, house.value.skuId)
-      ElMessage.success('已取消关注')
-      e.currentTarget.innerText = '关注房源'
-    } else {
-      userFocusService(userStore.userId, house.value.skuId)
-      e.currentTarget.classList.add('focused')
-      ElMessage.success('关注成功')
-      e.currentTarget.innerText = '已关注房源'
-    }
-
+  e = e || window.e
+  if (e.currentTarget.getAttribute('class').includes('focused')) {
+    e.currentTarget.classList.remove('focused')
+    userFocusedService(userStore.userId, house.value.skuId)
+    ElMessage.success('已取消关注')
+    e.currentTarget.innerText = '关注房源'
+  } else {
+    userFocusService(userStore.userId, house.value.skuId)
+    e.currentTarget.classList.add('focused')
+    ElMessage.success('关注成功')
+    e.currentTarget.innerText = '已关注房源'
+  }
 }
 const initFocus = async () => {
   //查询对应的用户和房源的关系

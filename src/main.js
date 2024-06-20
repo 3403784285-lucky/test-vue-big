@@ -16,7 +16,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap'
 import 'bootstrap/dist/js/bootstrap.bundle.min' // 注意这里使用了 bundle 版本，它包含了 Popper.js
 import '@/assets/font/iconfont.css'
-import ElementPlus from 'element-plus';
+
+import ElementPlus from 'element-plus'//引入Element Plus库，用于创建UI界面
+import 'element-plus/dist/index.css'//引入Element Plus库的CSS样式表
 const app = createApp(App)
 //带有凭证，跨域操作
 // axios.defaults.withCredentials = true
