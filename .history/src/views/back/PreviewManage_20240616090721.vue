@@ -1,14 +1,5 @@
 <template>
   <div class="container">
-  <div style="margin-top: 20px;margin-bottom: 20px; display: flex;justify-content: center;">
-    <el-radio-group v-model="radio2" fill="black">
-      <el-radio-button label="未支付" value="New York" />
-      <el-radio-button label="已支付" value="Washington" />
-      <el-radio-button label="已完成" value="Los Angeles" />
-      <el-radio-button label="退款中" value="po" />
-      <el-radio-button label="已退款" value="Chicago" />
-    </el-radio-group>
-  </div>
     <div class="card manage-frame">
       <div class="container">
         <div class="row">
@@ -119,10 +110,6 @@ import {
   previewReturnService,
   houseCertainService
 } from '@/api/house'
-
-
-
-const radio2 = ref('New York')
 const router = useRouter()
 let previews = ref()
 let timeStore = useTimeStore()

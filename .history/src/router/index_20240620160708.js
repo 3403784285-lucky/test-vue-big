@@ -137,36 +137,10 @@ const router = createRouter({
 //   next()
 // })
 
-
-//全局前置守卫，在每次导航之前，检查是否需要认证以及用户是否已经登录
-router.beforeEach((to,from,next) => {
-  const uerStore = useUserStore();
-  const buttonStore = useButtonStore()
-  const loggedIn = uerStore.token;
-  console.log(loggedIn);
-  if ((to.matched.some(record => record.meta.requiresAuth) && !loggedIn) ||( !loggedIn && buttonStore.fromButton)) {
-    ElMessageBox.confirm('请先登录再进行操作！', '提示', {
-      confirmButtonText: '去登录',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }).then(() => {
-      router.push('/user/login');
-      buttonStore.setFromButton(false);
-      // next('/user/login');
-    }).catch(() => {
-      console.log('用户取消操作');
-    });
-  }
-  else {
-    next();
-  }
-});
 router.afterEach((to, from) => {
-  // ||(to.path == '/user/login' && from.path != '/')
-  if ((to.path == '/pay' && from.path != '/')) {
+  if ((to.path == '/pay' && from.path != '/')||(to.path == '/login' && from.path != '/')) {
     location.reload()
     console.log(to.path + '------' + from.path)
   }
 })
-export default router;
-4
+export default router

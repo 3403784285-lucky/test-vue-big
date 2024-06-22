@@ -121,8 +121,9 @@ import {
 } from '@/api/house'
 
 
-
+const radio1 = ref('New York')
 const radio2 = ref('New York')
+const radio3 = ref('New York')
 const router = useRouter()
 let previews = ref()
 let timeStore = useTimeStore()
