@@ -46,7 +46,7 @@
               <div class="col-sm-3">
                 <div id="personProfileNav">
                   <img
-                    class="img-fluid rounded-3"
+                    class="img-fluid rounded-5"
                     :src="userStore.pic"
                     alt="头像"
                   />
@@ -57,6 +57,7 @@
                   {{ userStore.name }}
                 </div>
               </div>
+
             </div>
           </div>
         </div>

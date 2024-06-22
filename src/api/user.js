@@ -188,4 +188,7 @@ export const updateUserInfo = ({
   })
 }
 
-
+//获取用户状态
+export const getStatusById = (userId) => {
+  return request.post('/user/status',{ userId })
+}
