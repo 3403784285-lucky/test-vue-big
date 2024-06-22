@@ -5,26 +5,26 @@
         <el-row justify="space-between">
           <el-col :span="6">
             <el-card :style="{ backgroundImage: 'url(/img/a.png)',backgroundSize:'cover',color:'white' }">
-              <div>今日未支付订单</div>
-              <div>￥1234</div>
+              <div>已支付总订单</div>
+              <div>￥{{paidPrice}}</div>
             </el-card>
           </el-col>
           <el-col :span="5">
             <el-card :style="{ backgroundImage: 'url(/img/b.png)',backgroundSize:'cover',color:'white' }">
-              <div>今日支付订单</div>
-              <div>￥210</div>
+              <div>未支付总订单</div>
+              <div>￥{{unpaidPrice}}</div>
             </el-card>
           </el-col>
           <el-col :span="6">
             <el-card :style="{ backgroundImage: 'url(/img/c.png)',backgroundSize:'cover',color:'white' }">
-              <div>本月已支付订单</div>
-              <div>￥1234</div>
+              <div>已取消总订单</div>
+              <div>￥{{refundPrice}}</div>
             </el-card>
           </el-col>
           <el-col :span="6">
             <el-card :style="{ backgroundImage: 'url(/img/d.png)',backgroundSize:'cover',color:'white' }"> 
-              <div>本月未支付订单</div>
-              <div>￥210</div>
+              <div>交易总金额</div>
+              <div>￥{{totalPrice}}</div>
             </el-card>
           </el-col>
         </el-row>
@@ -52,16 +52,148 @@
           </el-card>
        
         </div>
-       
+
       </el-main>
     </el-container>
 
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted , ref } from 'vue'
 import * as echarts from 'echarts'
+import axios from "axios";
+import {useUserStore} from "@/stores/index"
+import {ElMessage} from "element-plus";
 
+const userStore = useUserStore();
+const token = userStore.token
+console.log('张培灵',token)
+const TotalOrders = ref([]);
+const paidPrice = ref(0);//已完成
+const unpaidPrice = ref(0);//已取消
+const refundPrice = ref(0);//已退款
+const totalPrice = ref(0);//交易总订单
+
+// 定义获取订单数据的函数
+/*const getOrdersByStatus = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/order/getAllOrder', {
+      headers: {
+        Authorization: `${token}`,
+      },
+    }).then(response => {
+      console.log('订单数据',response.data.data)
+      return response.data.data;
+    }).catch(error => {
+      console.error(error);
+      const message = error.response ? error.response.data.message: '错误';
+      ElMessage({
+        message: message,
+        type: 'error',
+        duration: 30000
+      });
+    });
+  } catch (error) {
+    console.error(`Error fetching orders with status ${status}:`, error);
+    return [];
+  }
+};*/
+/* 获取所有类型的订单 */
+const getOrders = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/order/getAllOrder', {
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    console.log('订单数据',response.data)
+    return response.data.data;
+  } catch (error) {
+    console.error(`Error fetching orders with status:`, error);
+    return [];
+  }
+};
+/*const getOrdersByStatus = async (status) => {
+  try {
+    const response = await axios.get('http://localhost:8080/order/getOrderByStatus', {
+      params: {
+        page: 1,
+        size: 10,
+        status: status,
+      },
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    console.log('订单状态数据',response.data)
+    return response.data.data;
+  } catch (error) {
+    console.error(`Error fetching orders with status ${status}:`, error);
+    return [];
+  }
+};*/
+// 获取金额数据函数
+const fetchAndDisplayOrders = async () => {
+  TotalOrders.value = await getOrders();
+  // 分别获取各个分类的 totalPrice
+  const totalPrices = TotalOrders.value.map(order => order.totalPrice);
+  paidPrice.value = totalPrices[0];
+  unpaidPrice.value = totalPrices[1];
+  refundPrice.value = totalPrices[2];
+  totalPrice.value = paidPrice.value + unpaidPrice.value + refundPrice.value;
+
+};
+// 近五日未支付订单数量
+const fetchUnpaidOrders = async () => {
+  const Orders = await getOrders();
+  /*// 过滤出状态为'已取消'
+  const cancelledOrders = Orders.value.filter(order => order.caters === '已取消');
+  // 提取所有符合条件的allOrderVOS数组
+  const result = cancelledOrders.map(order => order.allOrderVOS).flat();
+  console.log("已取消订单：",result)*/
+  // 获取当前日期并计算五日前的日期
+  const now = new Date();
+  const fiveDaysAgo = new Date(now);
+  fiveDaysAgo.setDate(now.getDate() - 5);
+  //存储每一天的订单数量
+  const dailyOrderCounts = {};
+  // 初始化最近五天的日期和订单数量
+  for (let i = 0; i <= 5; i++) {
+    const date = new Date(now);
+    date.setDate(now.getDate() - i);
+    const dateString = date.toISOString().split('T')[0];
+    dailyOrderCounts[dateString] = 0;
+  }
+  // 过滤出近五日的未支付订单
+  const recentUnpaidOrders = Orders
+      .filter(order => order.caters === '已取消')
+      .flatMap(order => order.allOrderVOS)
+      .filter(order => {
+        const orderDate = new Date(order.date);
+        return orderDate >= fiveDaysAgo && orderDate <= now;
+      });
+  console.log('过滤的数据',recentUnpaidOrders);
+
+  // 统计每一天的订单数量
+  recentUnpaidOrders.forEach(order => {
+    const dateString = order.date.split('T')[0];
+    if (dailyOrderCounts.hasOwnProperty(dateString)) {
+      dailyOrderCounts[dateString]++;
+    }
+  });
+  // 转换为指定的数据格式
+  const result = Object.entries(dailyOrderCounts).map(([date, count]) => [date, count]);
+  console.log('近五日每天的订单数量:', result);
+  return result;
+};
+/* 更新option4的数据 */
+const fetchUnpaidOrdersAndUpdateChart = async (chart) => {
+  const result = await fetchUnpaidOrders();
+  option4.series[0].data = result;
+
+  // 更新图表数据
+  chart.setOption(option4);
+};
 
 // 指定图表的配置项和数据
 var option1 = {
@@ -77,7 +209,7 @@ var option1 = {
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   },
   title: {
-    text: '用户当日支付订单数',
+    text: '用户每周支付订单数',
   
   },
   yAxis: {
@@ -109,7 +241,7 @@ var option2 = {
     show:false
   },
   title: {
-    text: '用户当日各类订单占比'
+    text: '用户每周各类订单占比'
   },
 
   series: [
@@ -123,14 +255,11 @@ var option2 = {
         borderRadius: 8
       },
       data: [
-        { value: 40, name: 'rose 1' },
-        { value: 38, name: 'rose 2' },
-        { value: 32, name: 'rose 3' },
-        { value: 30, name: 'rose 4' },
-        { value: 28, name: 'rose 5' },
-        { value: 26, name: 'rose 6' },
-        { value: 22, name: 'rose 7' },
-        { value: 18, name: 'rose 8' }
+        { value: 40, name: '已完成' },
+        { value: 38, name: '已支付' },
+        { value: 32, name: '未支付' },
+        { value: 30, name: '已取消' },
+        { value: 28, name: '已退款' },
       ]
     }
   ]
@@ -143,7 +272,7 @@ var option3 = {
     top:"10%"
   },
   title: {
-    text: '用关注房源类型占比'
+    text: '用户关注房源地区占比'
   },
   tooltip: {
     trigger: 'item',
@@ -151,7 +280,7 @@ var option3 = {
   },
 
   legend: {
-    data: ['Show', 'Click', 'Visit', 'Inquiry', 'Order'],
+    data: ['大兴', '嘉定', '宝山', '浦东', '金水'],
     top:40,
     
   },
@@ -190,18 +319,18 @@ var option3 = {
         }
       },
       data: [
-        { value: 60, name: 'Visit' },
-        { value: 40, name: 'Inquiry' },
-        { value: 20, name: 'Order' },
-        { value: 80, name: 'Click' },
-        { value: 100, name: 'Show' }
+        { value: 60, name: '大兴' },
+        { value: 40, name: '嘉定' },
+        { value: 20, name: '金水' },
+        { value: 80, name: '宝山' },
+        { value: 100, name: '浦东' }
       ]
     }
   ]
 };
 
 var option4 = {
-  grid:{ 
+  grid:{
     left:'10%',
     right:'10%',
     bottom:'10%',
@@ -240,7 +369,7 @@ var option4 = {
     {
       type: 'line',
       smooth: 0.6,
-  
+
       symbol: 'none',
       lineStyle: {
         color: '#5470C6',
@@ -252,17 +381,7 @@ var option4 = {
         data: [{ xAxis: 1 }, { xAxis: 3 }, { xAxis: 5 }, { xAxis: 7 }]
       },
       areaStyle: {},
-      data: [
-        ['2019-10-10', 200],
-        ['2019-10-11', 560],
-        ['2019-10-12', 750],
-        ['2019-10-13', 580],
-        ['2019-10-14', 250],
-        ['2019-10-15', 300],
-        ['2019-10-16', 450],
-        ['2019-10-17', 300],
-        ['2019-10-18', 100]
-      ]
+      data: [] //初始化未空数组
     }
   ]
 };
@@ -280,12 +399,15 @@ const initBarChart = () => {
   const chart = echarts.init(document.getElementById('bar-chart'))
 
   chart.setOption(option2)
+
 }
 
 const initBothChart = () => {
   const chart = echarts.init(document.getElementById('both-chart'))
 
   chart.setOption(option4)
+  // 动态获取数据并更新图表
+  fetchUnpaidOrdersAndUpdateChart(chart);
 }
 
 const initPieChart = () => {
@@ -301,6 +423,8 @@ const initCharts = () => {
 }
 onMounted(() => {
   initCharts()
+  fetchAndDisplayOrders();
+  fetchUnpaidOrders();
 })
 </script>
 
@@ -310,7 +434,7 @@ onMounted(() => {
 }
 .el-container {
   height: 86vh;
-  overflow: overlay;
+  /*overflow: overlay;*/
 }
 .user-info {
   text-align: center;

@@ -34,7 +34,7 @@ instance.interceptors.response.use(
         if (
             response.data.code === 0 ||
             response.data.code == 506 ||
-            response.data.code == 503||response.data.code == 200
+            response.data.code == 503
         ) {
             return response
         }
@@ -48,7 +48,7 @@ instance.interceptors.response.use(
             router.push('/login')
         }
         // 默认情况下的错误处理
-        ElMessage.error(error.response.data.message+"2" || '服务异常')
+        ElMessage.error(error.response.data.message || '服务异常')
         return Promise.reject(error)
     }
 )

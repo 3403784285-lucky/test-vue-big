@@ -46,6 +46,7 @@ const login = async () => {
         userStore.pic = res.data.data.userPic
         userStore.name = res.data.data.nickname
         ElMessage.success('登录成功')
+
         router.push('/')
       }
     })
