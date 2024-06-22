@@ -8,8 +8,8 @@
  */
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/index'
-import {useButtonStore} from "../stores";
-import {ElMessageBox} from "element-plus";
+import { useButtonStore } from "../stores";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {getStatusById} from "@/api/user";
 
 
@@ -146,7 +146,6 @@ router.beforeEach(async (to, from, next) => {
   const uerStore = useUserStore();
   const buttonStore = useButtonStore()
   const loggedIn = uerStore.token;
-  //const res = await userAllowanceService(userStore.userId)
   const userRole = (await getStatusById(uerStore.userId)).data.data;
   console.log(userRole);
   console.log(loggedIn);

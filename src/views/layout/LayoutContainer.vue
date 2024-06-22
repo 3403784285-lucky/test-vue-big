@@ -47,17 +47,16 @@
                 <div id="personProfileNav">
                   <img
                     class="img-fluid rounded-5"
-                    :src="userStore.pic"
+                    :src="userInfo.avatar"
                     alt="头像"
                   />
                 </div>
               </div>
               <div class="col-sm-6 nickname">
                 <div class="text-light" @click="clickName">
-                  {{ userStore.name }}
+                  {{ userInfo.name }}
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -68,14 +67,39 @@
   <router-view></router-view>
 </template>
 <script setup>
+import { onMounted,ref } from 'vue'
 import '@/assets/css/font.css'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/index'
+import {getStatusById} from "@/api/user";
 const userStore = useUserStore()
 const router = useRouter()
-const clickName = () => {
-  router.push('/user')
+const userInfo = ref({
+  avatar: '',
+  name:''
+})
+
+const clickName = async () => {
+  const userRole = (await getStatusById(userStore.userId)).data.data;
+  if (userRole === '0'){
+    await router.push('/user');
+  } else if(userRole === '1') {
+    await router.push('/manager-layout');
+  } else {
+    await router.push('/user/login');
+  }
 }
+
+onMounted(() => {
+  console.log(userStore.token)
+  if (userStore.token === '') {
+    userInfo.value.name = '去登录';
+  }else {
+    userInfo.value.avatar = userStore.pic;
+    userInfo.value.name = userStore.name;
+  }
+  console.log(userInfo);
+})
 </script>
 <style scoped>
 .project-title {
@@ -91,6 +115,7 @@ const clickName = () => {
   line-height: 1rem;
 }
 .nickname {
+
   font-family: 'YouYuan';
   margin-top: 1rem;
 }

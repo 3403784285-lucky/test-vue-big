@@ -6,15 +6,14 @@
       </el-button>
     </div>
     <div class="r-content">
-      <el-dropdown>
+      <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link" @click.stop>
-          <img class="user" src="https://tse3-mm.cn.bing.net/th/id/OIP-C.XnNffgb1NFyj1bxHEXyzsQAAAA?w=210&h=210&c=7&r=0&o=5&dpr=2&pid=1.7" alt="头像">
-          <span class="username">小星星</span>
+          <img class="user" :src="adminInfo.avatar" alt="头像">
+          <span class="username">{{adminInfo.name}}</span>
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>个人信息</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item command="logout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -25,12 +24,30 @@
 <script setup>
 import { Menu } from '@element-plus/icons-vue';
 import { useMenuStore } from '@/stores/modules/menuStore'; // 引入 Pinia Store
-
+import { ref } from 'vue'
+import { useUserStore } from "@/stores";
+import { useRouter } from 'vue-router'
+const userStore = useUserStore();
+const adminInfo = ref({
+  avatar:userStore.pic,
+  name:userStore.name
+})
+const router = useRouter();
 const menuStore = useMenuStore(); // 使用 Pinia Store
 
 const handleMenu = () => {
   menuStore.toggleCollapse(); // 调用 Pinia Store 的方法
 };
+
+const handleCommand = (command) => {
+  switch (command) {
+    case  'logout' :
+      router.push('/user/login');
+      break;
+    default:
+      console.log('无操作')
+  }
+}
 </script>
 
 <style lang="less" scoped>
