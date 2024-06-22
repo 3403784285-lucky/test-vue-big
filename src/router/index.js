@@ -28,8 +28,12 @@ const router = createRouter({
     {
       path: '/manager-layout',
       component: () => import('@/views/layout/ManagerLayout.vue'),
-      redirect: '/manage/house',
+      redirect: '/manage/index',
       children: [
+        {
+          path: '/manage/index',
+          component: ()=>import('@/views/back/IndexLay.vue')
+        },
         {
           path: '/manage/house',
           component: () => import('@/views/back/HouseManage.vue')
@@ -37,7 +41,7 @@ const router = createRouter({
         {
           path: '/manage/user',
           // 详细描述
-          component: () => import('@/views/back/IndexLay.vue')
+          component: () => import('@/views/back/UserManage.vue')
         },
         {
           path: '/manage/preview',
@@ -162,7 +166,7 @@ router.beforeEach((to,from,next) => {
   }
 });
 router.afterEach((to, from) => {
-  if ((to.path == '/pay' && from.path != '/')||(to.path == '/login' && from.path != '/')) {
+  if ((to.path == '/pay' && from.path != '/')) {
     location.reload()
     console.log(to.path + '------' + from.path)
   }
