@@ -162,7 +162,7 @@ router.beforeEach((to,from,next) => {
   }
 });
 router.afterEach((to, from) => {
-  if ((to.path == '/pay' && from.path != '/')||(to.path == '/login' && from.path != '/')) {
+  if ((to.path == '/pay' && from.path != '/')) {
     location.reload()
     console.log(to.path + '------' + from.path)
   }
