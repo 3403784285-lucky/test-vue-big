@@ -37,6 +37,7 @@ import {ref} from "vue";
 import { ElMessage } from 'element-plus';
 import { useUserStore } from '@/stores/index';
 import axios from "axios";
+import {updateProfile} from "@/api/user";
 
 
 const selectedFile = ref(null);
@@ -107,14 +108,14 @@ async function saveProfile() {
   }
 }
 
-
-const updateProfile = (userId, profileData) => {
+/*const updateProfile = (userId, profileData) => {
   return axios.put(`http://localhost:8080/user/upload/${userId}`, profileData, {
     headers: {
       'Content-Type': 'multipart/form-data',
+      'Authorization': userStore.token,
     }
   });
-};
+};*/
 
 
 </script>
