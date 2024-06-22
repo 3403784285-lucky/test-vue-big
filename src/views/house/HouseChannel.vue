@@ -791,11 +791,11 @@ const declareComment = async () => {
     )
     const res = await houseDeclareCommentService(temp.value)
 
-    temp.value = res.data.data
+    /*temp.value = res.data.data
     temp.value.nickname = userStore.name
     nestedArray.value.push([temp.value])
     inputComment.value.value = ''
-    ElMessage.success('评论发布成功')
+    ElMessage.success('评论发布成功')*/
     if (res.data.code === 200 && res.data.message === 'OK') {
       temp.value = res.data.data
       temp.value.nickname = userStore.name

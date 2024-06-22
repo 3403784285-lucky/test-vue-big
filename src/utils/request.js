@@ -12,7 +12,7 @@ const instance = axios.create({
 })
 
 // 添加请求拦截器
-axios.interceptors.request.use(
+instance.interceptors.request.use(
     (config) => {
         // 在发送请求之前做些什么
         const useStore = useUserStore()
@@ -35,7 +35,8 @@ axios.interceptors.response.use(
         if (
             response.data.code === 0 ||
             response.data.code == 506 ||
-            response.data.code == 503
+            response.data.code == 503 ||
+            response.data.code == 200
         ) {
             return response
         }

@@ -73,7 +73,6 @@ const paidPrice = ref(0);//已完成
 const unpaidPrice = ref(0);//已取消
 const refundPrice = ref(0);//已退款
 const totalPrice = ref(0);//交易总订单
-let data4 = [];
 
 // 定义获取订单数据的函数
 /*const getOrdersByStatus = async () => {
@@ -184,9 +183,16 @@ const fetchUnpaidOrders = async () => {
   });
   // 转换为指定的数据格式
   const result = Object.entries(dailyOrderCounts).map(([date, count]) => [date, count]);
-  data4 = result;
-  console.log('近五日每天的订单数量:', data4);
+  console.log('近五日每天的订单数量:', result);
+  return result;
+};
+/* 更新option4的数据 */
+const fetchUnpaidOrdersAndUpdateChart = async (chart) => {
+  const result = await fetchUnpaidOrders();
+  option4.series[0].data = result;
 
+  // 更新图表数据
+  chart.setOption(option4);
 };
 
 // 指定图表的配置项和数据
@@ -203,7 +209,7 @@ var option1 = {
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   },
   title: {
-    text: '用户当日支付订单数',
+    text: '用户每周支付订单数',
   
   },
   yAxis: {
@@ -249,14 +255,11 @@ var option2 = {
         borderRadius: 8
       },
       data: [
-        { value: 40, name: 'rose 1' },
-        { value: 38, name: 'rose 2' },
-        { value: 32, name: 'rose 3' },
-        { value: 30, name: 'rose 4' },
-        { value: 28, name: 'rose 5' },
-        { value: 26, name: 'rose 6' },
-        { value: 22, name: 'rose 7' },
-        { value: 18, name: 'rose 8' }
+        { value: 40, name: '已完成' },
+        { value: 38, name: '已支付' },
+        { value: 32, name: '未支付' },
+        { value: 30, name: '已取消' },
+        { value: 28, name: '已退款' },
       ]
     }
   ]
@@ -269,7 +272,7 @@ var option3 = {
     top:"10%"
   },
   title: {
-    text: '用户关注房源类型占比'
+    text: '用户关注房源地区占比'
   },
   tooltip: {
     trigger: 'item',
@@ -277,7 +280,7 @@ var option3 = {
   },
 
   legend: {
-    data: ['Show', 'Click', 'Visit', 'Inquiry', 'Order'],
+    data: ['大兴', '嘉定', '宝山', '浦东', '金水'],
     top:40,
     
   },
@@ -316,11 +319,11 @@ var option3 = {
         }
       },
       data: [
-        { value: 60, name: 'Visit' },
-        { value: 40, name: 'Inquiry' },
-        { value: 20, name: 'Order' },
-        { value: 80, name: 'Click' },
-        { value: 100, name: 'Show' }
+        { value: 60, name: '大兴' },
+        { value: 40, name: '嘉定' },
+        { value: 20, name: '金水' },
+        { value: 80, name: '宝山' },
+        { value: 100, name: '浦东' }
       ]
     }
   ]
@@ -378,16 +381,7 @@ var option4 = {
         data: [{ xAxis: 1 }, { xAxis: 3 }, { xAxis: 5 }, { xAxis: 7 }]
       },
       areaStyle: {},
-      data: [
-        ['2019-10-11', 560],
-        ['2019-10-12', 750],
-        ['2019-10-13', 580],
-        ['2019-10-14', 250],
-        ['2019-10-15', 300],
-        ['2019-10-16', 450],
-        ['2019-10-17', 300],
-        ['2019-10-18', 100]
-      ]
+      data: [] //初始化未空数组
     }
   ]
 };
@@ -405,12 +399,15 @@ const initBarChart = () => {
   const chart = echarts.init(document.getElementById('bar-chart'))
 
   chart.setOption(option2)
+
 }
 
 const initBothChart = () => {
   const chart = echarts.init(document.getElementById('both-chart'))
 
   chart.setOption(option4)
+  // 动态获取数据并更新图表
+  fetchUnpaidOrdersAndUpdateChart(chart);
 }
 
 const initPieChart = () => {
