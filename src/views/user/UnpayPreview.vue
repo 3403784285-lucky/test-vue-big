@@ -3,7 +3,7 @@
     <div v-for="(order, index) in orders" :key="index" class="card">
       <!-- 订单的内容 -->
       <div class="container order-inner">
-        <!-- ... （省略其他部分的内容） -->
+
 
         <!-- 使用订单数据渲染 -->
         <div class="row justify-content-between order-desc">
@@ -18,7 +18,6 @@
             </div>
           </div>
         </div>
-        <!-- ... （省略其他部分的内容） -->
 
         <!-- 使用订单数据渲染 -->
         <div class="container">
@@ -39,7 +38,6 @@
             </div>
           </div>
         </div>
-        <!-- ... （省略其他部分的内容） -->
 
         <!-- 使用订单数据渲染 -->
         <div class="row button-click justify-content-end">
@@ -123,7 +121,6 @@
             {{ order.orderCountDown }}
           </div>
         </div>
-        <!-- ... （省略其他部分的内容） -->
       </div>
     </div>
   </div>
