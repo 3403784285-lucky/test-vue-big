@@ -361,7 +361,7 @@ span {
   background-color: rgba(144, 146, 136, 0.421);
 }
 .registerButton {
-  margin: 0.5em 10.7rem;
+  margin: 0.5em 10。5rem;
   margin-top: 1em;
   border: 0;
   background-color: rgba(193, 197, 196, 0);

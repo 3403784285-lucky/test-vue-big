@@ -149,7 +149,6 @@ router.beforeEach((to,from,next) => {
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
-      const timeStore=useTimeStore() 
       timeStore.refresh=true
       router.push('/user/login');
       buttonStore.setFromButton(false);

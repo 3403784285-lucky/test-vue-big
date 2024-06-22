@@ -244,6 +244,6 @@ export const selectedOptionService = (search1, search2, search3) => {
   return request.post('/house/searchOption', { search1, search2, search3 })
 }
 //订单分类
-export const clarifyOrderService = (page,size,status) => {
-  return request.get('/order/getOrderByStatus',{params:{page:page,size:size,status:status}})
+export const clarifyOrderService = () => {
+  return request.post('/clarify', { search1, search2, search3 })
 }

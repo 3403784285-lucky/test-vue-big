@@ -336,7 +336,7 @@ const simpleSchemaLogin = yup.object().shape({
   border-radius: 2rem;
   font-family: 'YouYuan';
   box-shadow: 0px 2px 8px 4px rgba(215, 211, 211, 0.411);
-  margin-left: 2.5rem;
+  margin-left: 2rem;
   color: rgba(247, 246, 246, 0.781);
   cursor: pointer;
 }
@@ -361,7 +361,7 @@ span {
   background-color: rgba(144, 146, 136, 0.421);
 }
 .registerButton {
-  margin: 0.5em 10.7rem;
+  margin: 0.5em 9.5rem;
   margin-top: 1em;
   border: 0;
   background-color: rgba(193, 197, 196, 0);
@@ -374,7 +374,7 @@ span {
 }
 .toWhere {
   font-size: 0.5em;
-  margin-left: 2em;
+  margin-left: 1.5em;
   margin-bottom: 20px;
 }
 .toLogin,

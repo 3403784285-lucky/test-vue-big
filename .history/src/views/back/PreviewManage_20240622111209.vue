@@ -121,7 +121,7 @@ import {
   previewReturnService,
   houseCertainService
 } from '@/api/house'
-
+import { string } from 'yup'
 
 
 
@@ -270,9 +270,6 @@ const nextPage = () => {
 <style scoped>
 .manage-frame {
   padding: 2rem;
-
-  height: 66.6vh;
- 
 }
 .test {
   margin-top: 1rem;

@@ -65,9 +65,7 @@
         </div>
         <div class="split"></div>
       </div>
-     
-    </div>
-    <nav aria-label="Page navigation example" class="test">
+      <nav aria-label="Page navigation example" class="test">
         <ul class="pagination justify-content-center">
           <li class="page-item">
             <a
@@ -89,6 +87,7 @@
           </li>
         </ul>
       </nav>
+    </div>
     <div
       class="modal fade"
       id="exampleModalHouse"
@@ -861,7 +860,6 @@ const debounceFuncDo = _.debounce((house) => doHouse(house), 500, {
 }
 .manage-frame {
   padding: 1rem;
-  height: 76.6vh;
 }
 .name {
   font-size: 0.9rem;

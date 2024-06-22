@@ -124,7 +124,6 @@ import {
 
 
 
-
 const radio2 = ref('New York')
 const router = useRouter()
 let previews = ref()
@@ -145,52 +144,27 @@ const page = ref(1)
 const totalPage = ref()
 
 const changeSelect=async(e)=>{
-  
   if(e=="未支付"){
-    const res=await clarifyOrderService(page.value,5,0)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
     
 
   }
   else if(e=="已支付"){
-    const res=await clarifyOrderService(page.value,4,1)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
-    
+    console.log()
 
   }
   else if(e=="已取消"){
-    const res=await clarifyOrderService(page.value,4,-1)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
+    console.log()
 
   }
   else if(e=="已退款"){
-    const res=await clarifyOrderService(page.value,4,-3)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
+    console.log()
 
   }
   else if(e=="退款中"){
-    const res=await clarifyOrderService(page.value,4,-3)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
+    console.log()
 
   }else if(e=="已完成"){
-    const res=await clarifyOrderService(page.value,4,2)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
+    console.log()
 
   }
 
@@ -215,7 +189,7 @@ const init = async () => {
   const res = await clarifyOrderService(page.value,5,2)
   console.log(res.data.data)
    previews.value = res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
+  // totalPage.value = res.data.data.pages
 }
 const changeName = (status) => {
   if (status == -2) {
@@ -270,9 +244,6 @@ const nextPage = () => {
 <style scoped>
 .manage-frame {
   padding: 2rem;
-
-  height: 66.6vh;
- 
 }
 .test {
   margin-top: 1rem;

@@ -270,12 +270,12 @@ const nextPage = () => {
 <style scoped>
 .manage-frame {
   padding: 2rem;
-
-  height: 66.6vh;
+  padding-bottom:0 ;
+  height: 67vh;
  
 }
 .test {
-  margin-top: 1rem;
+  margin-top: 0.6rem;
   font-family: 'YouYuan';
 }
 .page-link {

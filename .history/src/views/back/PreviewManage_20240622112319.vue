@@ -270,8 +270,6 @@ const nextPage = () => {
 <style scoped>
 .manage-frame {
   padding: 2rem;
-
-  height: 66.6vh;
  
 }
 .test {

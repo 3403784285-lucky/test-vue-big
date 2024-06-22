@@ -12,6 +12,7 @@ import {useButtonStore} from "../stores";
 import {ElMessageBox} from "element-plus";
 import { useTimeStore } from '../stores';
 
+
 //创建router实例
 // 配置路由模式：
 // hash模式  createWebHistory 跳转不带#号
@@ -149,7 +150,6 @@ router.beforeEach((to,from,next) => {
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
-      const timeStore=useTimeStore() 
       timeStore.refresh=true
       router.push('/user/login');
       buttonStore.setFromButton(false);
@@ -170,3 +170,4 @@ router.afterEach((to, from) => {
   }
 })
 export default router;
+4

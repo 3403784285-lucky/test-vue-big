@@ -136,7 +136,7 @@ const router = createRouter({
 //   next()
 // })
 
-
+const timeStore=useTimeStore() 
 //全局前置守卫，在每次导航之前，检查是否需要认证以及用户是否已经登录
 router.beforeEach((to,from,next) => {
   const uerStore = useUserStore();
@@ -149,7 +149,6 @@ router.beforeEach((to,from,next) => {
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
-      const timeStore=useTimeStore() 
       timeStore.refresh=true
       router.push('/user/login');
       buttonStore.setFromButton(false);
