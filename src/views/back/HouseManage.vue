@@ -578,10 +578,12 @@ const timeB = ref({
   timeBigTwo: '',
   timeBigThree: ''
 })
-
+const selectedImage = ref()
 const tempIs = (house) => {
+  // 清空原来图片缓存
+  selectedImage.value = null
   temp.value = house
-  console.log(temp.value)
+  console.log('房屋',house)
 }
 const clickRow = (skuId) => {
   tempSkuId.value = skuId
@@ -632,7 +634,7 @@ const timeIs = () => {
 const openFileInput = () => {
   $('#fileBind').click()
 }
-const selectedImage = ref()
+
 const handleFileChange = (event) => {
   // 处理文件选择变化
   const file = event.target.files[0];
