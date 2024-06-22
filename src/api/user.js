@@ -15,7 +15,7 @@ export const userLoginService = ({ id, password }) => {
 }
 
 export const updateProfile = (userId, profileData) => {
-  return request.put(`/upload/${userId}`, profileData, {
+  return request.put(`/user/upload/${userId}`, profileData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     }
