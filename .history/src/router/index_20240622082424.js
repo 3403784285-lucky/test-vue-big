@@ -8,10 +8,10 @@
  */
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/index'
-import { useButtonStore } from "../stores";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {getStatusById} from "@/api/user";
+import {useButtonStore} from "../stores";
+import {ElMessageBox} from "element-plus";
 import { useTimeStore } from '../stores';
+const timeStore=useTimeStore() 
 
 //创建router实例
 // 配置路由模式：
@@ -28,7 +28,6 @@ const router = createRouter({
     {
       path: '/manager-layout',
       component: () => import('@/views/layout/ManagerLayout.vue'),
-      meta: { requiredRole: '1' },
       redirect: '/manage/house',
       children: [
         {
@@ -140,21 +139,17 @@ const router = createRouter({
 
 
 //全局前置守卫，在每次导航之前，检查是否需要认证以及用户是否已经登录
-//判定身份权限
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to,from,next) => {
   const uerStore = useUserStore();
   const buttonStore = useButtonStore()
   const loggedIn = uerStore.token;
-  const userRole = (await getStatusById(uerStore.userId)).data.data;
-  console.log(userRole);
   console.log(loggedIn);
-  if ((to.matched.some(record => record.meta.requiresAuth) && !loggedIn) || (!loggedIn && buttonStore.fromButton)) {
+  if ((to.matched.some(record => record.meta.requiresAuth) && !loggedIn) ||( !loggedIn && buttonStore.fromButton)) {
     ElMessageBox.confirm('请先登录再进行操作！', '提示', {
       confirmButtonText: '去登录',
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
-      const timeStore=useTimeStore() 
       timeStore.refresh=true
       router.push('/user/login');
       buttonStore.setFromButton(false);
@@ -162,17 +157,17 @@ router.beforeEach(async (to, from, next) => {
     }).catch(() => {
       console.log('用户取消操作');
     });
-  } else if (to.matched.some(record => record.meta.requiredRole) && userRole !== to.meta.requiredRole) {
-    ElMessage('非管理员不可进入！');
-    next({path: '/'}); // 或其他你希望重定向的页面
-  } else {
+  }
+  else {
     next();
   }
 });
 router.afterEach((to, from) => {
+  // ||(to.path == '/user/login' && from.path != '/')
   if ((to.path == '/pay' && from.path != '/')) {
     location.reload()
     console.log(to.path + '------' + from.path)
   }
 })
 export default router;
+4

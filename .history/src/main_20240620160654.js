@@ -22,9 +22,8 @@ import 'element-plus/dist/index.css'//引入Element Plus库的CSS样式表
 const app = createApp(App)
 //带有凭证，跨域操作
 // axios.defaults.withCredentials = true
-app.use(pinia)
 app.use(router)
-
+app.use(pinia)
 app.use(ElementPlus);
 app.mount('#app')
 

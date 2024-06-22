@@ -861,7 +861,7 @@ const debounceFuncDo = _.debounce((house) => doHouse(house), 500, {
 }
 .manage-frame {
   padding: 1rem;
-  height: 76.6vh;
+  height: 69.6vh;
 }
 .name {
   font-size: 0.9rem;
