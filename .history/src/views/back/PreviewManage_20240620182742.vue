@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-  <div style="margin-top: 20px;margin-bottom: 20px; display: flex;justify-content: center;">
+  <div class="container" style="display: flex;justify-content: center;">
+    <div style="margin-top: 20px;margin-bottom: 20px;">
     <el-radio-group v-model="radio2" fill="black">
       <el-radio-button label="未支付" value="New York" />
       <el-radio-button label="已支付" value="Washington" />
@@ -121,8 +121,9 @@ import {
 } from '@/api/house'
 
 
-
+const radio1 = ref('New York')
 const radio2 = ref('New York')
+const radio3 = ref('New York')
 const router = useRouter()
 let previews = ref()
 let timeStore = useTimeStore()
