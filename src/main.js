@@ -29,9 +29,22 @@ app.use(ElementPlus);
 app.mount('#app')
 
 import * as ELIcons from '@element-plus/icons-vue'
+import axios from "axios";
 // 全局导入element plus图标
 for (let iconName in ELIcons) {
     app.component(iconName, ELIcons[iconName])
 }
+axios.interceptors.response.use(response => {
+    console.log('拦截器', response);
+    return response;
+}, error => {
+    if (error.response && error.response.status === 401) {
+        // 当状态码为 401 时，重定向到登录页面
+        window.location = "http://localhost:5173/user/login";
+    }else if (error.response && error.response.status === 403) {
+        // 当状态码为 401 时，重定向到登录页面
+        window.location = "http://localhost:5173/user/login";
+    }
 
-
+    return Promise.reject(error);
+});

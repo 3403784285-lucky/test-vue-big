@@ -18,18 +18,27 @@ import { computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useMenuStore } from '@/stores/modules/menuStore'; // 引入 Pinia Store
 import {
+  HomeFilled,
   House,
   User,
   Calendar
 } from '@element-plus/icons-vue';
 
 const icons = {
+  HomeFilled,
   House,
   User,
   Calendar
 };
 
 const MenuData = [
+  {
+    name: 'indexManagement',
+    label: '首页',
+    icon: HomeFilled,
+    path: '/manage/index',
+    url: '/manage/index'
+  },
   {
     name: 'userManagement',
     label: '用户管理',

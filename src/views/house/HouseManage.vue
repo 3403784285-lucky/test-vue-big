@@ -139,7 +139,7 @@
         <div class="col-md-1 align-self-center more">更多</div>
       </div>
 
-      <div class="row justify-content-between">
+      <div class="row justify-content-start">
         <div
           class="col-md-3 small-part"
           v-for="house in houses.slice(0, h)"
