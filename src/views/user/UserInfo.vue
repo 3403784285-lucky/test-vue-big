@@ -86,7 +86,6 @@ async function saveProfile() {
     formData.append('nickname', editProfileForm.value.name);
     formData.append('email', editProfileForm.value.email);
 
-
     const response = await updateProfile(userId, formData);
     userStore.name = editProfileForm.value.name;
     userStore.email = editProfileForm.value.email;

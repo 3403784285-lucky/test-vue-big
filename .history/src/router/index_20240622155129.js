@@ -8,10 +8,10 @@
  */
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores/index'
-import { useButtonStore } from "../stores";
-import {ElMessage, ElMessageBox} from "element-plus";
-import {getStatusById} from "@/api/user";
-import { useTimeStore } from '../stores';
+import {useButtonStore} from "../stores";
+import {ElMessageBox} from "element-plus";
+
+
 
 //创建router实例
 // 配置路由模式：
@@ -28,13 +28,9 @@ const router = createRouter({
     {
       path: '/manager-layout',
       component: () => import('@/views/layout/ManagerLayout.vue'),
-      redirect: '/manage/index',
       meta: { requiredRole: '1' },
+      redirect: '/manage/house',
       children: [
-        {
-          path: '/manage/index',
-          component: ()=>import('@/views/back/IndexLay.vue')
-        },
         {
           path: '/manage/house',
           component: () => import('@/views/back/HouseManage.vue')
@@ -42,7 +38,7 @@ const router = createRouter({
         {
           path: '/manage/user',
           // 详细描述
-          component: () => import('@/views/back/UserManage.vue')
+          component: () => import('@/views/back/IndexLay.vue')
         },
         {
           path: '/manage/preview',
@@ -149,6 +145,7 @@ router.beforeEach(async (to, from, next) => {
   const uerStore = useUserStore();
   const buttonStore = useButtonStore()
   const loggedIn = uerStore.token;
+  //const res = await userAllowanceService(userStore.userId)
   const userRole = (await getStatusById(uerStore.userId)).data.data;
   console.log(userRole);
   console.log(loggedIn);
@@ -158,7 +155,7 @@ router.beforeEach(async (to, from, next) => {
       cancelButtonText: '取消',
       type: 'warning',
     }).then(() => {
-      const timeStore=useTimeStore()
+      const timeStore=useTimeStore() 
       timeStore.refresh=true
       router.push('/user/login');
       buttonStore.setFromButton(false);
