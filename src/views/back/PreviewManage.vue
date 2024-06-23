@@ -16,36 +16,30 @@
           <div class="col-md-2"></div>
         </div>
         <div class="split"></div>
-
-        <el-tabs v-if="previews.length > 0">
-          <div class="row" v-for="preview in previews" :key="preview.orderSkuId">
-            <div class="img-frame col-md-1">
-              <img class="img-fluid" :src="preview.housePic" alt="房屋图片" />
-            </div>
-            <div class="name col-md-2">{{ preview.orderSkuId }} {{ preview.nickname }} {{ preview.userId }}</div>
-            <div class="col-md-6 des-manage">
-              {{ preview.description }}
-            </div>
-            <div class="col-md-1">
-              <button
-                type="button"
-                class="down rounded-2"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                @click="getValue(preview)"
-              >
-                {{ changeName(preview.status) }}
-              </button>
-            </div>
-            <div class="col-md-1">
-              <button type="button" class="agree rounded-2">指派</button>
-            </div>
-            <div class="split"></div>
+        <div class="row" v-for="preview in previews" :key="preview.orderSkuId">
+          <div class="img-frame col-md-1">
+            <img class="img-fluid" :src="preview.housePic" alt="房屋图片" />
           </div>
-        </el-tabs>
-        <el-empty v-else description="无数据" class="no-records">
-        </el-empty>
-
+          <div class="name col-md-2">{{ preview.nickname }}</div>
+          <div class="col-md-6 des-manage">
+            {{ preview.description }}
+          </div>
+          <div class="col-md-1">
+            <button
+              type="button"
+              class="down rounded-2"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+              @click="getValue(preview)"
+            >
+              {{ changeName(preview.status) }}
+            </button>
+          </div>
+          <div class="col-md-1">
+            <button type="button" class="agree rounded-2">指派</button>
+          </div>
+          <div class="split"></div>
+        </div>
       </div>
     </div>
     <nav aria-label="Page navigation example" class="test">
@@ -110,6 +104,8 @@ const totalPage = ref(1)
 
 const changeSelect = async (e) => {
   page.value = 1
+  previews.value = [];
+  totalPage.value = 1;
   await fetchData(e)
 }
 
@@ -117,32 +113,34 @@ const fetchData = async (status) => {
   try {
     const res = await clarifyOrderService(page.value, 5, status)
     console.log('Full response:', res)
-
     if (res.data && res.data.data) {
       const data = res.data.data;
       previews.value = data.records || [];
       totalPage.value = data.pages || 1;
-      console.log('data:', data)
+      console.log('Data:', data)
       console.log('Previews:', previews.value)
       console.log('Total Pages:', totalPage.value)
     } else {
-      console.error('错误:', res.data)
+      console.error('Unexpected response structure:', res.data)
     }
   } catch (error) {
-    console.error('数据获取设备:', error)
+    console.error('Error fetching data:', error)
   }
 }
 
 
-const getValue = (preview) => {
+const getValue =async (preview) => {
   temp.value = preview
+
+
   console.log('点击了')
 }
 
 const dealWithPreview = (preview) => {
+  console.log('66666preview', preview)
   if (preview.status == -2) {
     agreeReturn(preview)
-    preview.status = -3
+    /*preview.status = -3*/
     $('.cancel')[0].click()
   } else {
     seeHouse(preview)
@@ -184,13 +182,17 @@ const prePage = async () => {
 }
 
 const agreeReturn = async (preview) => {
+  console.log('previewReturnService', preview)
   await previewReturnService(preview)
   ElMessage.success('退款成功')
 }
 
 const seeHouse = async (preview) => {
-  const res = await houseCertainService(preview)
-  timeStore.house = res.data
+  console.log('houseCertainService', preview)
+  const res = await houseCertainService(preview.skuId)
+  console.log('张培灵',res.data)
+  timeStore.house = res.data.data
+  console.log(JSON.stringify(res)+"666")
   router.push('/house/channel')
 }
 

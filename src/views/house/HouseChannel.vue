@@ -773,7 +773,6 @@ const copy = ref({
   nickname: null,
   receiverId: null
 })
-
 const commentContent = ref('');
 const declareComment = async () => {
   if (!commentContent.value) {
@@ -849,7 +848,6 @@ const replyComment = async (comment) => {
 
   ElMessage.success('评论回复成功')
 }
-
 const isDisabled1 = (option) => {
   // Return the disabled status for the given option
   return disabledOptions1[option]
@@ -868,7 +866,6 @@ const temp = ref({
   houseId: null,
   receiverId: null
 })
-
 const house = ref([])
 house.value = timeStore.house
 const previews = ref([])
@@ -895,7 +892,6 @@ const getAfterDate = () => {
   console.log(timeLength.value)
   return date.toLocaleString()
 }
-
 function extractTimeFromDate(dateString) {
   // 将日期时间字符串转换为Date对象
   const dateObject = new Date(dateString)
@@ -1001,11 +997,12 @@ const order = reactive({
   //第二个选项选择开始时间
 })
 const timeLength = ref(0)
-let orderJudge
+let orderJudge;
 
 const clickPreview = async (skuId) => {
   const res = await judgeOrderService(skuId)
-  orderJudge.value = res.data.data
+  console.log('orderJudge.value',res.data.data)
+  orderJudge = res.data.data
   console.log(res.data)
 }
 
@@ -1024,7 +1021,7 @@ let message = reactive({
   value:''
 })
 const init = async () => {
-  console.log(house.value.skuId)
+  console.log('搜索特定房屋预约时间小',house.value)
   const bes = await houseManageTimeService(house.value.skuId)
   const ses = await houseOrderTimeService(house.value.skuId)
   time.value = bes.data.data
@@ -1084,6 +1081,7 @@ const init = async () => {
 init()
 
 const previewOrder = async () => {
+  let op=false
   if (selectedOption1.value == null || selectedOption2.value == null) {
     ElMessage.error('必选选项为空')
   } else {
@@ -1111,15 +1109,22 @@ const previewOrder = async () => {
       ) {
         $('.cancel-preview')[0].click()
         $('.uniqueButton')[0].click()
-        break
+        op=true
+        break;
       }
     }
-    $('.cancel-preview')[0].click()
-    const res = await insertPreviewService(order)
-    order.orderSkuId = res.data.data.orderSkuId
-    timeStore.order = order
-    console.log(res.data)
-    router.replace('/pay')
+    if(op==true){
+      console.log(111)
+    }else{
+      $('.cancel-preview')[0].click()
+      const res = await insertPreviewService(order)
+      order.orderSkuId = res.data.data.orderSkuId
+      timeStore.order = order
+      console.log(res.data)
+      router.replace('/pay')
+    }
+
+
   }
 }
 
