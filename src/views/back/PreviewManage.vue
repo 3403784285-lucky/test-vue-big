@@ -16,30 +16,34 @@
           <div class="col-md-2"></div>
         </div>
         <div class="split"></div>
-        <div class="row" v-for="preview in previews" :key="preview.orderSkuId">
-          <div class="img-frame col-md-1">
-            <img class="img-fluid" :src="preview.housePic" alt="房屋图片" />
+        <el-tabs v-if="previews.length > 0">
+          <div class="row" v-for="preview in previews" :key="preview.orderSkuId">
+            <div class="img-frame col-md-1">
+              <img class="img-fluid" :src="preview.housePic" alt="房屋图片" />
+            </div>
+            <div class="name col-md-2">{{ preview.orderSkuId }} {{ preview.nickname }} {{ preview.userId }}</div>
+            <div class="col-md-6 des-manage">
+              {{ preview.description }}
+            </div>
+            <div class="col-md-1">
+              <button
+                type="button"
+                class="down rounded-2"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                @click="getValue(preview)"
+              >
+                {{ changeName(preview.status) }}
+              </button>
+            </div>
+            <div class="col-md-1">
+              <button type="button" class="agree rounded-2">指派</button>
+            </div>
+            <div class="split"></div>
           </div>
-          <div class="name col-md-2">{{ preview.nickname }}</div>
-          <div class="col-md-6 des-manage">
-            {{ preview.description }}
-          </div>
-          <div class="col-md-1">
-            <button
-              type="button"
-              class="down rounded-2"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-              @click="getValue(preview)"
-            >
-              {{ changeName(preview.status) }}
-            </button>
-          </div>
-          <div class="col-md-1">
-            <button type="button" class="agree rounded-2">指派</button>
-          </div>
-          <div class="split"></div>
-        </div>
+        </el-tabs>
+        <el-empty v-else description="无数据" class="no-records">
+        </el-empty>
       </div>
     </div>
     <nav aria-label="Page navigation example" class="test">
