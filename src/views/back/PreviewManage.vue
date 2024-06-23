@@ -1,109 +1,80 @@
 <template>
   <div class="container">
-  <div style="margin-top: 20px;margin-bottom: 20px; display: flex;justify-content: center;">
-    <el-radio-group v-model="radio2" fill="black" @change="changeSelect">
-      <el-radio-button label="未支付" value="0" />
-      <el-radio-button label="已支付" value="1" />
-      <el-radio-button label="已完成" value="2" />
-      <el-radio-button label="退款中" value="-2" />
-      <el-radio-button label="已退款" value="-3" />
-      <el-radio-button label="已取消" value="-1" />
-
-    </el-radio-group>
-  </div>
+    <div style="margin-top: 20px; margin-bottom: 20px; display: flex; justify-content: center;">
+      <el-radio-group v-model="radio2" fill="black" @change="changeSelect">
+        <el-radio-button label="未支付" value="0" />
+        <el-radio-button label="已支付" value="1" />
+        <el-radio-button label="已完成" value="2" />
+        <el-radio-button label="退款中" value="-2" />
+        <el-radio-button label="已退款" value="-3" />
+        <el-radio-button label="已取消" value="-1" />
+      </el-radio-group>
+    </div>
     <div class="card manage-frame">
       <div class="container">
         <div class="row">
           <div class="col-md-2"></div>
         </div>
-
         <div class="split"></div>
 
-        <div class="row" v-for="preview in previews" :key="preview.orderSkuId">
-          <div class="img-frame col-md-1">
-            <img class="img-fluid" :src="preview.housePic" alt="用户头像" />
+        <el-tabs v-if="previews.length > 0">
+          <div class="row" v-for="preview in previews" :key="preview.orderSkuId">
+            <div class="img-frame col-md-1">
+              <img class="img-fluid" :src="preview.housePic" alt="房屋图片" />
+            </div>
+            <div class="name col-md-2">{{ preview.orderSkuId }} {{ preview.nickname }} {{ preview.userId }}</div>
+            <div class="col-md-6 des-manage">
+              {{ preview.description }}
+            </div>
+            <div class="col-md-1">
+              <button
+                type="button"
+                class="down rounded-2"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                @click="getValue(preview)"
+              >
+                {{ changeName(preview.status) }}
+              </button>
+            </div>
+            <div class="col-md-1">
+              <button type="button" class="agree rounded-2">指派</button>
+            </div>
+            <div class="split"></div>
           </div>
-          <div class="name col-md-2">小星星{{ preview.userId }}</div>
-          <div class="col-md-6 des-manage">
-            {{ preview.description }}
-          </div>
-          <div class="col-md-1">
-            <button
-              type="button"
-              class="down rounded-2"
-              data-bs-toggle="modal"
-              data-bs-target="#exampleModal"
-              @click="getValue(preview)"
-            >
-              {{ changeName(preview.orderStatus) }}
-            </button>
-          </div>
-          <div class="col-md-1">
-            <button type="button" class="agree rounded-2">指派</button>
-          </div>
-          <div class="split"></div>
-        </div>
+        </el-tabs>
+        <el-empty v-else description="无数据" class="no-records">
+        </el-empty>
+
       </div>
     </div>
     <nav aria-label="Page navigation example" class="test">
       <ul class="pagination justify-content-center">
         <li class="page-item">
-          <a
-            class="page-link"
-            href="#"
-            tabindex="-1"
-            aria-disabled="true"
-            @click="prePage"
-            >上一页</a
-          >
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true" @click="prePage">上一页</a>
         </li>
-
         <li class="page-item">
           <a class="page-link" href="#">{{ page }}</a>
         </li>
-
         <li class="page-item">
           <a class="page-link" href="#" @click="nextPage">下一页</a>
         </li>
       </ul>
     </nav>
   </div>
-  <div
-    class="modal fade"
-    id="exampleModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true"
-  >
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog about-return">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">提示</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           {{ changeContent(temp) }}
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary cancel"
-            data-bs-dismiss="modal"
-          >
-            取消
-          </button>
-          <button
-            type="button"
-            class="btn bg-dark text-white"
-            @click="dealWithPreview(temp)"
-          >
-            确定
-          </button>
+          <button type="button" class="btn btn-secondary cancel" data-bs-dismiss="modal">取消</button>
+          <button type="button" class="btn bg-dark text-white" @click="dealWithPreview(temp)">确定</button>
         </div>
       </div>
     </div>
@@ -121,80 +92,47 @@ import {
   previewReturnService,
   houseCertainService
 } from '@/api/house'
+import { ElMessage } from 'element-plus'
 
-
-
-
-const radio2 = ref('New York')
+const radio2 = ref(-1)
 const router = useRouter()
-let previews = ref()
+let previews = ref([])
 let timeStore = useTimeStore()
 const temp = ref({
   orderSkuId: null,
   userId: null,
-  orderSpuId: null,
   orderCreateTime: null,
-  orderStatus: null,
-  orderBadTime: null,
-  orderEndTime: null,
-  description: null,
-  skuId: null,
-  totalPrice: null
+  status: null,
+  description: null
 })
 const page = ref(1)
-const totalPage = ref()
+const totalPage = ref(1)
 
-const changeSelect=async(e)=>{
-  
-  if(e=="未支付"){
-    const res=await clarifyOrderService(page.value,5,0)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-    
-
-  }
-  else if(e=="已支付"){
-    const res=await clarifyOrderService(page.value,4,1)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
-    
-
-  }
-  else if(e=="已取消"){
-    const res=await clarifyOrderService(page.value,4,-1)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
-
-  }
-  else if(e=="已退款"){
-    const res=await clarifyOrderService(page.value,4,-3)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
-
-  }
-  else if(e=="退款中"){
-    const res=await clarifyOrderService(page.value,4,-3)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
-
-  }else if(e=="已完成"){
-    const res=await clarifyOrderService(page.value,4,2)
-    previews.value=res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
-
-
-
-  }
-
+const changeSelect = async (e) => {
+  page.value = 1
+  await fetchData(e)
 }
+
+const fetchData = async (status) => {
+  try {
+    const res = await clarifyOrderService(page.value, 5, status)
+    console.log('Full response:', res)
+
+    if (res.data && res.data.data) {
+      const data = res.data.data;
+      previews.value = data.records || [];
+      totalPage.value = data.pages || 1;
+      console.log('data:', data)
+      console.log('Previews:', previews.value)
+      console.log('Total Pages:', totalPage.value)
+    } else {
+      console.error('错误:', res.data)
+    }
+  } catch (error) {
+    console.error('数据获取设备:', error)
+  }
+}
+
 
 const getValue = (preview) => {
   temp.value = preview
@@ -202,9 +140,9 @@ const getValue = (preview) => {
 }
 
 const dealWithPreview = (preview) => {
-  if (preview.orderStatus == -2) {
+  if (preview.status == -2) {
     agreeReturn(preview)
-    preview.orderStatus = '-3'
+    preview.status = -3
     $('.cancel')[0].click()
   } else {
     seeHouse(preview)
@@ -212,11 +150,9 @@ const dealWithPreview = (preview) => {
 }
 
 const init = async () => {
-  const res = await clarifyOrderService(page.value,5,2)
-  console.log(res.data.data)
-   previews.value = res.data.data.records[0].orderSkus
-  totalPage.value = res.data.data.pages
+  await fetchData(-1)
 }
+
 const changeName = (status) => {
   if (status == -2) {
     return '退款'
@@ -224,55 +160,54 @@ const changeName = (status) => {
     return '查看'
   }
 }
+
 const changeContent = (preview) => {
-  console.log(preview.orderStatus)
-  if (preview.orderStatus == -2) {
+  if (preview.status == -2) {
     return '您确定要同意该订单的退款吗'
   } else {
     return '您即将跳转到房屋详情页面，要继续操作吗？'
   }
 }
+
 onUnmounted(() => {
   $('.modal-backdrop').remove()
   $('body').removeClass('modal-open')
 })
+
 init()
-//上一页
-const prePage = () => {
-  console.log('上一页')
-  if (page.value != 1) {
+
+const prePage = async () => {
+  if (page.value > 1) {
     page.value--
-    init()
+    await fetchData(radio2.value)
   }
 }
-//同意退款
+
 const agreeReturn = async (preview) => {
   await previewReturnService(preview)
-
   ElMessage.success('退款成功')
 }
+
 const seeHouse = async (preview) => {
   const res = await houseCertainService(preview)
-  console.log(res.data)
-  timeStore.house = res.data.data
+  timeStore.house = res.data
   router.push('/house/channel')
 }
 
-//下一页
-const nextPage = () => {
-  console.log('下一页')
-  if (page.value != totalPage.value) {
+const nextPage = async () => {
+  if (page.value < totalPage.value) {
     page.value++
-    init()
+    await fetchData(radio2.value)
   }
 }
 </script>
+
 <style scoped>
 .manage-frame {
   padding: 2rem;
 
   height: 66.6vh;
- 
+
 }
 .test {
   margin-top: 1rem;
