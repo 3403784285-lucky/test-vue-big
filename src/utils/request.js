@@ -34,7 +34,8 @@ instance.interceptors.response.use(
         if (
             response.data.code === 0 ||
             response.data.code == 506 ||
-            response.data.code == 503||response.data.code == 200
+            response.data.code == 503 ||
+            response.data.code == 200
         ) {
             return response
         }

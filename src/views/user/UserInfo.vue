@@ -37,7 +37,7 @@ import {ref} from "vue";
 import { ElMessage } from 'element-plus';
 import { useUserStore } from '@/stores/index';
 import axios from "axios";
-import { updateProfile } from '../../api/user'
+import {updateProfile} from "@/api/user";
 
 
 const selectedFile = ref(null);
@@ -87,7 +87,6 @@ async function saveProfile() {
     formData.append('email', editProfileForm.value.email);
 
     const response = await updateProfile(userId, formData);
-
     userStore.name = editProfileForm.value.name;
     userStore.email = editProfileForm.value.email;
 
@@ -106,6 +105,15 @@ async function saveProfile() {
     ElMessage.error('信息更新失败');
   }
 }
+
+/*const updateProfile = (userId, profileData) => {
+  return axios.put(`http://localhost:8080/user/upload/${userId}`, profileData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': userStore.token,
+    }
+  });
+};*/
 
 
 </script>
