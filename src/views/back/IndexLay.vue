@@ -101,7 +101,7 @@ const totalPrice = ref(0);//交易总订单
 /* 获取所有类型的订单 */
 const getOrders = async () => {
   try {
-    const response = await axios.get('http://localhost:8080/order/getAllOrder', {
+    const response = await axios.get('/api/order/getAllOrder', {
       headers: {
         Authorization: `${token}`,
       },

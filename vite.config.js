@@ -23,15 +23,14 @@ export default defineConfig({
     }
   },
   server: {
-    
     open: true, // 设置服务启动时是否自动打开浏览器
     cors: true, // 允许跨域
-    // 设置代理，根据我们项目实际情况配置
+    // 设置代理，
     proxy: {
-      '/api': { //apiTest是自行设置的请求前缀，按照这个来匹配请求，有这个字段的请求，就会进到代理来
-        target: '192.168.43.105',
-        changeOrigin: true, //是否跨域
-
+      '/api': {
+        target: 'http://121.41.107.127:8080',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, '')
       }
     }
 }})

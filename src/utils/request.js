@@ -3,7 +3,7 @@ import { ElMessage } from 'element-plus'
 import router from '@/router'
 import axios from 'axios'
 
-const baseURL = 'http://localhost:8080'
+const baseURL = '/api'
 
 const instance = axios.create({
     baseURL,
@@ -34,8 +34,7 @@ instance.interceptors.response.use(
         if (
             response.data.code === 0 ||
             response.data.code == 506 ||
-            response.data.code == 503 ||
-            response.data.code == 200
+            response.data.code == 503||response.data.code == 200
         ) {
             return response
         }
